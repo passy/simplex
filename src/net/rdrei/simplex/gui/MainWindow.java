@@ -1,5 +1,6 @@
 package net.rdrei.simplex.gui;
 
+import java.awt.Dialog.ModalityType;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -85,6 +87,15 @@ public class MainWindow {
 		menuBar.add(mnFile);
 		
 		JMenuItem mntmNew = new JMenuItem("Neu");
+		mntmNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				// Show the NewProblemDialog
+				NewProblemDialog dialog = new NewProblemDialog();
+				dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
 		mntmNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_MASK));
 		mnFile.add(mntmNew);
 		
