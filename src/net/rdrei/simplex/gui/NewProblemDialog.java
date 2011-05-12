@@ -2,21 +2,20 @@ package net.rdrei.simplex.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-import java.awt.Frame;
-import java.awt.Window;
+import java.awt.Font;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.RowSpec;
-import com.jgoodies.forms.factories.FormFactory;
 import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.border.EmptyBorder;
+
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 public class NewProblemDialog extends JDialog {
 	private static final long serialVersionUID = -210925167785406768L;
@@ -46,7 +45,7 @@ public class NewProblemDialog extends JDialog {
 				FormFactory.RELATED_GAP_ROWSPEC,
 				FormFactory.DEFAULT_ROWSPEC,}));
 		{
-			JLabel lblNeuesProblemAnlegen = new JLabel("Neues Problem anlegen");
+			JLabel lblNeuesProblemAnlegen = new JLabel("Neues Problem");
 			lblNeuesProblemAnlegen.setFont(new Font("Dialog", Font.BOLD, 16));
 			contentPanel.add(lblNeuesProblemAnlegen, "2, 2");
 		}
