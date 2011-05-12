@@ -2,6 +2,7 @@ package net.rdrei.simplex.gui;
 
 import java.awt.Font;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -10,6 +11,11 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerNumberModel;
+
+import com.jgoodies.forms.factories.FormFactory;
+import com.jgoodies.forms.layout.ColumnSpec;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * @author pascal
@@ -39,6 +45,7 @@ public class FormularInputPanel extends JPanel {
 		this.baseVariableSpinners = new ArrayList<JSpinner>();
 		
 		buildLayout();
+		buildLayoutWidgets();
 	}
 	
 	/**
@@ -46,7 +53,7 @@ public class FormularInputPanel extends JPanel {
 	 * of variables.
 	 * 
 	 * Example output for this.numberOfVariables = 3:
-	 * "Z(x1, x2, x3)"
+	 * "Z(x1, x2, x3) = "
 	 */
 	private String buildFnHead() {
 		StringBuilder builder = new StringBuilder();
@@ -63,20 +70,63 @@ public class FormularInputPanel extends JPanel {
 			}
 		}
 		
-		builder.append(")");
+		builder.append(") = ");
 		return builder.toString();
 	}
 	
 	private void buildLayout() {
-		GroupLayout groupLayout = new GroupLayout(this);
+		// There must be two columns per variable plus an additional column.
+		final int columnCount = (1 + (this.numberOfVariables * 2)) * 2;
+		ColumnSpec[] cspec = new ColumnSpec[columnCount];
 		
-		JLabel lblHeadline = new JLabel("1. Schritt");
-		lblHeadline.setFont(new Font("Dialog", Font.BOLD, 16));
+		for (int i = 0; i < columnCount; i += 2) {
+			cspec[i] = FormFactory.RELATED_GAP_COLSPEC;
+			cspec[i + 1] = FormFactory.DEFAULT_COLSPEC;
+		}
 		
-		JLabel lblTargetfn = new JLabel("Zielfunktion");
-		JLabel lblZx = new JLabel(this.buildFnHead());
+		// TODO: Make this rowCount depend on something else than a guess.
+		final int rowCount = 5 * 2;
+		RowSpec[] rspec = new RowSpec[rowCount];
 		
+		for (int i = 0; i < rowCount; i += 2) {
+			rspec[i] = FormFactory.RELATED_GAP_ROWSPEC;
+			rspec[i + 1] = FormFactory.DEFAULT_ROWSPEC;
+		}
+		
+		FormLayout layout = new FormLayout(cspec, rspec);
+		setLayout(layout);
+	}
+	
+	private void buildLayoutWidgets() {
+		
+		// Headline
+		{
+			JLabel lblHeadline = new JLabel("1. Schritt");
+			lblHeadline.setFont(new Font("Dialog", Font.BOLD, 16));
+			add(lblHeadline, "2, 2");
+		}
+		
+		// Target function start
+		{
+			JLabel lblTargetfn = new JLabel("Zielfunktion");
+			JLabel lblZfn = new JLabel(this.buildFnHead());
+			add(lblTargetfn, "2, 4");
+			add(lblZfn, "2, 6");
+		}
+		
+		// Target function variables
 		buildBaseVariableSpinners();
+		for(int i = 0; i < this.baseVariableSpinners.size(); i += 1) {
+			JSpinner spinner = this.baseVariableSpinners.get(i);
+			String varName = "x" + (i + 1);
+			JLabel varLabel = new JLabel(varName);
+			// The coordinates require that the above column count
+			// calculations were correct. Otherwise we might run into
+			// a NullPointer condition here.
+			int xCoord = (4 + 4 * (i));
+			add(spinner, String.format("%d, 6", xCoord));
+			add(varLabel, String.format("%d, 6", xCoord + 2));
+		}
 		
 		JSpinner spinner = new JSpinner();
 		spinner.setModel(new SpinnerNumberModel(new Integer(1), null, null, new Integer(1)));
@@ -115,92 +165,6 @@ public class FormularInputPanel extends JPanel {
 		JLabel label_1 = new JLabel("x2 ≤");
 		
 		JSpinner spinner_8 = new JSpinner();
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblHeadline)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblZx)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(12)
-							.addComponent(lblX)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinner_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(lblX_1)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinner_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addComponent(lblRestriktionen)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(spinner_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblX_2)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinner_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(lblX_3)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(spinner_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addComponent(lblNichtnegativittsbedingung)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(spinner_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(12)
-							.addComponent(label, GroupLayout.PREFERRED_SIZE, 29, GroupLayout.PREFERRED_SIZE)
-							.addGap(12)
-							.addComponent(spinner_7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addGap(12)
-							.addComponent(label_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-							.addGap(12)
-							.addComponent(spinner_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-						.addComponent(lblTargetfn)
-						.addComponent(lblXX))
-					.addContainerGap(196, Short.MAX_VALUE))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblHeadline)
-					.addGap(12)
-					.addComponent(lblTargetfn)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblZx)
-						.addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblX)
-						// .addComponent(spinner_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblX_1)
-						.addComponent(spinner_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(lblRestriktionen)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(spinner_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblX_2)
-						.addComponent(spinner_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblX_3)
-						.addComponent(spinner_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(12)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(spinner_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(1)
-							.addComponent(label))
-						.addComponent(spinner_7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(1)
-							.addComponent(label_1))
-						.addComponent(spinner_8, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(lblNichtnegativittsbedingung)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(lblXX)
-					.addContainerGap(49, Short.MAX_VALUE))
-		);
-		setLayout(groupLayout);
 	}
 
 	/**
