@@ -116,6 +116,8 @@ public class FormularInputPanel extends JPanel {
 		
 		// Target function variables
 		buildBaseVariableSpinners();
+		// Iterates through all created spinners and adds them to the layout
+		// with a label afterwards showing their variable name.
 		for(int i = 0; i < this.baseVariableSpinners.size(); i += 1) {
 			JSpinner spinner = this.baseVariableSpinners.get(i);
 			String varName = "x" + (i + 1);
