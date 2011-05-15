@@ -1,15 +1,10 @@
 package net.rdrei.simplex.gui;
 
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.Iterator;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerNumberModel;
 
 import com.jgoodies.forms.factories.FormFactory;

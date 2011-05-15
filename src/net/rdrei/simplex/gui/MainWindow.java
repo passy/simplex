@@ -91,7 +91,8 @@ public class MainWindow {
 		mntmNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				// Show the NewProblemDialog
-				NewProblemDialog dialog = new NewProblemDialog();
+				NewProblemDialog dialog = new NewProblemDialog(
+						frmSimplexrechner, true);
 				dialog.setModalityType(ModalityType.APPLICATION_MODAL);
 				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 				dialog.setVisible(true);

@@ -3,6 +3,9 @@ package net.rdrei.simplex.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Frame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,17 +19,24 @@ import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class NewProblemDialog extends JDialog {
 	private static final long serialVersionUID = -210925167785406768L;
 	private final JPanel contentPanel = new JPanel();
+	
+	public NewProblemDialog(Frame owner, boolean modal) {
+		super(owner, modal);
+		this.initialize();
+	}
 
 	/**
 	 * Create the dialog.
 	 */
 	public NewProblemDialog() {
+		this.initialize();
+	}
+	
+	private void initialize() {
 		setTitle("Neues Standard-Maximum-Problem");
 		setBounds(100, 100, 450, 300);
 		getContentPane().setLayout(new BorderLayout());
