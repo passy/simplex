@@ -30,7 +30,8 @@ public class FormularInputPanel extends JPanel {
 	private short numberOfVariables;
 	private short numberOfRestrictions;
 	
-	private ArrayList<JSpinner> baseVariableSpinners;
+	private JSpinner[] baseVariableSpinners;
+	private JSpinner[][] restrictionVariableSpinners;
 
 	
 	/// Constructor providing the default values for variables and restrictions.
@@ -42,7 +43,9 @@ public class FormularInputPanel extends JPanel {
 		this.numberOfVariables = numberOfVariables;
 		this.numberOfRestrictions = numberOfRestrictions;
 		
-		this.baseVariableSpinners = new ArrayList<JSpinner>();
+		this.baseVariableSpinners = new JSpinner[numberOfVariables];
+		this.restrictionVariableSpinners = 
+			new JSpinner[numberOfRestrictions][numberOfVariables + 1];
 		
 		buildLayout();
 		buildLayoutWidgets();
@@ -74,6 +77,28 @@ public class FormularInputPanel extends JPanel {
 		return builder.toString();
 	}
 	
+	/**
+	 * Create a String for the given count of variables representing
+	 * the not negativity restriction.
+	 * e.g. x1, x2, x3 ≥ 0
+	 */
+	private String buildNNR() {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 1; i <= this.numberOfVariables; i += 1) {
+			builder.append("x");
+			builder.append(i);
+			
+			// For all but the last iteration
+			if (i != this.numberOfVariables) {
+				builder.append(", ");
+			} else {
+				builder.append(" ≥ 0");
+			}
+		}
+		
+		return builder.toString();
+	}
+	
 	private void buildLayout() {
 		// There must be two columns per variable plus an additional column.
 		final int columnCount = (1 + (this.numberOfVariables * 2)) * 2;
@@ -84,8 +109,8 @@ public class FormularInputPanel extends JPanel {
 			cspec[i + 1] = FormFactory.DEFAULT_COLSPEC;
 		}
 		
-		// TODO: Make this rowCount depend on something else than a guess.
-		final int rowCount = 5 * 2;
+		// We have 6 static rows and one for each restrictions.
+		final int rowCount = (6 + this.numberOfRestrictions) * 2;
 		RowSpec[] rspec = new RowSpec[rowCount];
 		
 		for (int i = 0; i < rowCount; i += 2) {
@@ -118,67 +143,108 @@ public class FormularInputPanel extends JPanel {
 		buildBaseVariableSpinners();
 		// Iterates through all created spinners and adds them to the layout
 		// with a label afterwards showing their variable name.
-		for(int i = 0; i < this.baseVariableSpinners.size(); i += 1) {
-			JSpinner spinner = this.baseVariableSpinners.get(i);
-			String varName = "x" + (i + 1);
-			JLabel varLabel = new JLabel(varName);
-			// The coordinates require that the above column count
-			// calculations were correct. Otherwise we might run into
-			// a NullPointer condition here.
-			int xCoord = (4 + 4 * (i));
-			add(spinner, String.format("%d, 6", xCoord));
-			add(varLabel, String.format("%d, 6", xCoord + 2));
+		{
+			int spinnerCount = this.baseVariableSpinners.length;
+			for(int i = 0; i < spinnerCount; i += 1) {
+				JSpinner spinner = this.baseVariableSpinners[i];
+				String varName = "x" + (i + 1);
+				
+				if (i != spinnerCount - 1) {
+					// Append a plus sign if not the last label.
+					varName = varName + " +";
+				}
+				JLabel varLabel = new JLabel(varName);
+				// The coordinates require that the above column count
+				// calculations were correct. Otherwise we might run into
+				// a NullPointer condition here.
+				int xCoord = (4 + 4 * (i));
+				add(spinner, String.format("%d, 6", xCoord));
+				add(varLabel, String.format("%d, 6", xCoord + 2));
+			}
 		}
 		
-		JSpinner spinner = new JSpinner();
-		spinner.setModel(new SpinnerNumberModel(new Integer(1), null, null, new Integer(1)));
+		// Restrictions
 		
-		JLabel lblX = new JLabel("x1 +");
+		buildRestrictionVariableSpinners();
+		{
+			JLabel lblRestrictions = new JLabel("Restriktionen");
+			add(lblRestrictions, "2, 8");
+			
+			// Create a new row for each restriction with
+			// (numberOfVariables + 1) in it.
+			for (int i = 0; i < this.numberOfRestrictions; i += 1) {
+				for (int j = 0; i <= this.numberOfVariables; j += 1) {
+					// Attach the spinner first.
+					JSpinner spinner = this.restrictionVariableSpinners[i][j];
+					int xCoord, yCoord;
+					
+					xCoord = 2 + (j * 4);
+					yCoord = 10 + (i * 2);
+					add(spinner, String.format("%d, %d", xCoord, yCoord));
+					
+					// The last iteration does not have a label attached.
+					if (j == this.numberOfVariables) {
+						break;
+					}
+					// Add the label, depending on whether this is the last
+					// spinner in the row (right side) or not.
+					String varText;
+					if (j == this.numberOfVariables - 1) {
+						// Second to last variable, so we need the <= sign in.
+						varText = "x" + (j + 1) + " ≤ ";						
+					} else {
+						varText = "x" + (j + 1) + " + ";
+					}
+					
+					JLabel label = new JLabel(varText);
+					// Override xCoord, keep yCoord.
+					xCoord = 4 + (j * 4);
+					add(label, String.format("%d, %d", xCoord, yCoord));
+				}
+			}
+		}
 		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setModel(new SpinnerNumberModel(new Integer(1), null, null, new Integer(1)));
-		
-		JLabel lblX_1 = new JLabel("x2 +");
-		
-		JLabel lblRestriktionen = new JLabel("Restriktionen");
-		
-		JSpinner spinner_2 = new JSpinner();
-		
-		JLabel lblX_2 = new JLabel("x1 + ");
-		
-		JSpinner spinner_3 = new JSpinner();
-		
-		JSpinner spinner_4 = new JSpinner();
-		
-		JLabel lblX_3 = new JLabel("x2 ≤");
-		
-		JSpinner spinner_5 = new JSpinner();
-		
-		JLabel lblNichtnegativittsbedingung = new JLabel("Nicht-Negativitätsbedingung");
-		
-		JLabel lblXX = new JLabel("x1, x2 ≥ 0");
-		
-		JSpinner spinner_6 = new JSpinner();
-		
-		JLabel label = new JLabel("x1 + ");
-		
-		JSpinner spinner_7 = new JSpinner();
-		
-		JLabel label_1 = new JLabel("x2 ≤");
-		
-		JSpinner spinner_8 = new JSpinner();
+		{
+			// Not negativity restriction
+			JLabel lblNotNegative = new JLabel("NNB");
+			int yCoord = (10 + (2 * this.numberOfRestrictions));
+			add(lblNotNegative, String.format("2, %d", yCoord));
+			
+			JLabel lblNotNegativeText = new JLabel(this.buildNNR());
+			yCoord += 2;
+			add(lblNotNegativeText, String.format("2, %d", yCoord));
+		}
 	}
 
 	/**
-	 * Populates the list of spinners for the tar function equation.
+	 * Populates the list of spinners for the target function equation.
 	 */
 	private void buildBaseVariableSpinners() {
 		for (int i = 0; i < this.numberOfVariables; i += 1) {
 			JSpinner spinner = new JSpinner();
-			// Set the minimum and default value to 1, and step size to 1.
-			SpinnerNumberModel model = new SpinnerNumberModel(1, 1, null, 1);
+			// Set the default value to 1, and step size to 1.
+			SpinnerNumberModel model = new SpinnerNumberModel(1, null,
+					null, 1);
 			spinner.setModel(model);
-			this.baseVariableSpinners.add(spinner);
+			this.baseVariableSpinners[i] = spinner;
+		}
+	}
+	
+	/**
+	 * Populates the list of restriction spinners for the tar function equation.
+	 */
+	private void buildRestrictionVariableSpinners() {
+		for (int i = 0; i < this.numberOfRestrictions; i += 1) {
+			// Notice the <= here. We need to store the right side of the
+			// equation as well.
+			for (int j = 0; j <= this.numberOfVariables; j += 1) {
+				JSpinner spinner = new JSpinner();
+				// Set the default value to 1, and step size to 1.
+				SpinnerNumberModel model = new SpinnerNumberModel(1, null,
+						null, 1);
+				spinner.setModel(model);
+				this.restrictionVariableSpinners[i][j] = spinner;
+			}
 		}
 	}
 }

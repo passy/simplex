@@ -20,7 +20,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class MainWindow {
 
-	private JFrame frame;
+	private JFrame frmSimplexrechner;
 
 	/**
 	 * Launch the application.
@@ -30,7 +30,7 @@ public class MainWindow {
 			public void run() {
 				try {
 					MainWindow window = new MainWindow();
-					window.frame.setVisible(true);
+					window.frmSimplexrechner.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -50,7 +50,7 @@ public class MainWindow {
 		FormularInputPanel panel = new FormularInputPanel();
 		
 		JButton btnNewButton = new JButton("Weiter");
-		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
+		GroupLayout groupLayout = new GroupLayout(frmSimplexrechner.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
@@ -69,19 +69,20 @@ public class MainWindow {
 					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
-		frame.getContentPane().setLayout(groupLayout);
+		frmSimplexrechner.getContentPane().setLayout(groupLayout);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 451, 393);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmSimplexrechner = new JFrame();
+		frmSimplexrechner.setTitle("SIMPLEX-Rechner");
+		frmSimplexrechner.setBounds(100, 100, 451, 393);
+		frmSimplexrechner.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
+		frmSimplexrechner.setJMenuBar(menuBar);
 		
 		JMenu mnFile = new JMenu("Datei");
 		menuBar.add(mnFile);
