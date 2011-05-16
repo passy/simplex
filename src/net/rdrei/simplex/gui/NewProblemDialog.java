@@ -22,12 +22,12 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class NewProblemDialog extends JDialog {
 	private static final long serialVersionUID = -210925167785406768L;
+	// Stores whether the dialog was closed via the OK button or canceled.
+	private boolean accepted = false;
 	private final JPanel contentPanel = new JPanel();
 	
-	public NewProblemDialog(Frame owner, boolean modal) {
-		super(owner, modal);
-		this.initialize();
-	}
+	private JSpinner restrictionsCountSpinner;
+	private JSpinner variablesCountSpinner;
 
 	/**
 	 * Create the dialog.
@@ -35,7 +35,21 @@ public class NewProblemDialog extends JDialog {
 	public NewProblemDialog() {
 		this.initialize();
 	}
+
+	public NewProblemDialog(Frame owner, boolean modal) {
+		super(owner, modal);
+		this.initialize();
+	}
 	
+	
+	public int getRestrictionsCount() {
+		return (Integer) restrictionsCountSpinner.getValue();
+	}
+
+	public int getVariablesCount() {
+		return (Integer) variablesCountSpinner.getValue();
+	}
+
 	private void initialize() {
 		setTitle("Neues Standard-Maximum-Problem");
 		setBounds(100, 100, 450, 300);
@@ -66,18 +80,18 @@ public class NewProblemDialog extends JDialog {
 			contentPanel.add(lblVariablen, "2, 6");
 		}
 		{
-			JSpinner spinner = new JSpinner();
-			spinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
-			contentPanel.add(spinner, "4, 6");
+			variablesCountSpinner = new JSpinner();
+			variablesCountSpinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
+			contentPanel.add(variablesCountSpinner, "4, 6");
 		}
 		{
 			JLabel lblNewLabel = new JLabel("Restriktionen");
 			contentPanel.add(lblNewLabel, "2, 8");
 		}
 		{
-			JSpinner spinner = new JSpinner();
-			spinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
-			contentPanel.add(spinner, "4, 8");
+			restrictionsCountSpinner = new JSpinner();
+			restrictionsCountSpinner.setModel(new SpinnerNumberModel(1, 1, 5, 1));
+			contentPanel.add(restrictionsCountSpinner, "4, 8");
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -85,6 +99,12 @@ public class NewProblemDialog extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						NewProblemDialog.this.setAccepted(true);
+						NewProblemDialog.this.dispose();
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
@@ -100,6 +120,14 @@ public class NewProblemDialog extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+
+	public boolean isAccepted() {
+		return accepted;
+	}
+	
+	private void setAccepted(boolean accepted) {
+		this.accepted = accepted;
 	}
 
 }

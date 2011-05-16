@@ -22,19 +22,18 @@ public class FormularInputPanel extends JPanel {
 	private static final short defaultNumberOfVariables = 2;
 	private static final short defaultNumberOfRestrictions = 2;
 	
-	private short numberOfVariables;
-	private short numberOfRestrictions;
+	private int numberOfVariables;
+	private int numberOfRestrictions;
 	
 	private JSpinner[] baseVariableSpinners;
 	private JSpinner[][] restrictionVariableSpinners;
 
-	
 	/// Constructor providing the default values for variables and restrictions.
 	public FormularInputPanel() {
 		this(defaultNumberOfVariables, defaultNumberOfRestrictions);
 	}
 	
-	public FormularInputPanel(short numberOfVariables, short numberOfRestrictions) {
+	public FormularInputPanel(int numberOfVariables, int numberOfRestrictions) {
 		this.numberOfVariables = numberOfVariables;
 		this.numberOfRestrictions = numberOfRestrictions;
 		
