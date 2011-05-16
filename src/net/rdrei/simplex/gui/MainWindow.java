@@ -7,6 +7,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,6 +25,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 public class MainWindow {
 
 	private JFrame mainFrame;
+	private final static Logger LOGGER = Logger.getLogger(
+			MainWindow.class.getName());
 	
 	class NewDialogWindowListener extends WindowAdapter {
 		@Override
@@ -35,10 +39,14 @@ public class MainWindow {
 					// new main panel.
 					int numberOfVariables = dialog.getVariablesCount();
 					int numberOfRestrictions = dialog.getRestrictionsCount();
+					LOGGER.log(Level.INFO, String.format(
+							"Creating new panel with %d variables and " + 
+							"%d restrictions.", numberOfVariables,
+							numberOfRestrictions));
+					
 					FormularInputPanel panel = new FormularInputPanel(
 							numberOfVariables, numberOfRestrictions
 					);
-					System.out.println("Setting new Panel!");
 					MainWindow.this.setMainPanel(panel);
 				}
 			}
