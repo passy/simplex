@@ -1,7 +1,6 @@
 package net.rdrei.simplex.gui;
 
 import java.awt.Dialog.ModalityType;
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -22,21 +21,6 @@ public class MainWindow {
 
 	private JFrame frmSimplexrechner;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MainWindow window = new MainWindow();
-					window.frmSimplexrechner.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -70,6 +54,7 @@ public class MainWindow {
 					.addContainerGap())
 		);
 		frmSimplexrechner.getContentPane().setLayout(groupLayout);
+		frmSimplexrechner.setVisible(true);
 	}
 
 	/**
