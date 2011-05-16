@@ -167,7 +167,7 @@ public class FormularInputPanel extends JPanel {
 			// Create a new row for each restriction with
 			// (numberOfVariables + 1) in it.
 			for (int i = 0; i < this.numberOfRestrictions; i += 1) {
-				for (int j = 0; i <= this.numberOfVariables; j += 1) {
+				for (int j = 0; j <= this.numberOfVariables; j += 1) {
 					// Attach the spinner first.
 					JSpinner spinner = this.restrictionVariableSpinners[i][j];
 					int xCoord, yCoord;
