@@ -7,6 +7,8 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import net.rdrei.simplex.lib.SimplexProblem;
+
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
@@ -16,7 +18,7 @@ import com.jgoodies.forms.layout.RowSpec;
  * @author pascal
  *
  */
-public class FormularInputPanel extends JPanel {
+public class FormularInputPanel extends JPanel implements SimplexProblem {
 	private static final long serialVersionUID = 1L;
 	
 	private static final short defaultNumberOfVariables = 2;
@@ -240,5 +242,35 @@ public class FormularInputPanel extends JPanel {
 				this.restrictionVariableSpinners[i][j] = spinner;
 			}
 		}
+	}
+
+	@Override
+	public int getNumberOfBaseVariables() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int[] getBaseVariables() {
+		int[] result = new int[numberOfVariables];
+		int i = 0;
+		
+		for (JSpinner spinner : baseVariableSpinners) {
+			result[i++] = (Integer) spinner.getValue();
+		}
+		
+		return result;
+	}
+
+	@Override
+	public int getNumberOfRestrictions() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int[][] getRestrictions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

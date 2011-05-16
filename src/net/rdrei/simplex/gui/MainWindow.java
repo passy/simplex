@@ -18,13 +18,19 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import net.rdrei.simplex.lib.SimplexProblem;
+
 public class MainWindow {
 
 	private JFrame mainFrame;
+	private SimplexProblem simplexProblem;
+	private JButton btnContinue;
+	
 	private final static Logger LOGGER = Logger.getLogger(
 			MainWindow.class.getName());
 	
@@ -47,6 +53,7 @@ public class MainWindow {
 					FormularInputPanel panel = new FormularInputPanel(
 							numberOfVariables, numberOfRestrictions
 					);
+					simplexProblem = panel;
 					MainWindow.this.setMainPanel(panel);
 				}
 			}
@@ -69,7 +76,23 @@ public class MainWindow {
 			dialog.setVisible(true);
 		}
 	};
+	
+	class StartSimplexButtonActionListener implements ActionListener {
 
+		@Override
+		/**
+		 * Pass data to the backend and display it in the frontend.
+		 */
+		public void actionPerformed(ActionEvent e) {
+			String variables = "Variables: ";
+			for (int var : simplexProblem.getBaseVariables()) {
+				variables += "" + var + ", ";
+			}
+			
+			String restrictions = "Restrictions: ";
+			JOptionPane.showMessageDialog(mainFrame, variables + " " + restrictions);
+		}
+	};
 
 	/**
 	 * Create the application.
@@ -82,14 +105,17 @@ public class MainWindow {
 	
 	private void setMainPanel(JPanel panel) {
 		mainFrame.getContentPane().removeAll();
-		JButton btnNewButton = new JButton("Weiter");
+		btnContinue = new JButton("Weiter");
+		// This needs to be changed depending on which page of the wizard
+		// we're on.
+		btnContinue.addActionListener(new StartSimplexButtonActionListener());
 		GroupLayout groupLayout = new GroupLayout(mainFrame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addComponent(panel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 628, Short.MAX_VALUE)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addContainerGap(382, Short.MAX_VALUE)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 234, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnContinue, GroupLayout.PREFERRED_SIZE, 234, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
 		groupLayout.setVerticalGroup(
@@ -97,7 +123,7 @@ public class MainWindow {
 				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
 					.addComponent(panel, GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
+					.addComponent(btnContinue, GroupLayout.PREFERRED_SIZE, 42, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
 		);
 		mainFrame.getContentPane().setLayout(groupLayout);
@@ -105,6 +131,7 @@ public class MainWindow {
 	
 	private void loadDefaultPanel() {
 		FormularInputPanel panel = new FormularInputPanel();
+		simplexProblem = panel;
 		setMainPanel(panel);
 	}
 	
