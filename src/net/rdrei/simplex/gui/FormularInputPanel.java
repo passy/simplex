@@ -58,7 +58,7 @@ public class FormularInputPanel extends JPanel {
 		
 		for (int i = 1; i <= this.numberOfVariables; i += 1) {
 			// Unfortunately, 
-			builder.append("x");
+			builder.append('x');
 			builder.append(i);
 			
 			// Not for the last iteration.
@@ -79,7 +79,7 @@ public class FormularInputPanel extends JPanel {
 	private String buildNNR() {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 1; i <= this.numberOfVariables; i += 1) {
-			builder.append("x");
+			builder.append('x');
 			builder.append(i);
 			
 			// For all but the last iteration
