@@ -16,7 +16,7 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MainWindow window = new MainWindow();
+					new MainWindow();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
