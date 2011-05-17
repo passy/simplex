@@ -264,7 +264,7 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 	 * @param restrictionIndex
 	 */
 	public int[] getRestrictionCoefficients(int restrictionIndex) {
-		if (restrictionIndex > this.numberOfVariables) {
+		if (restrictionIndex > this.numberOfRestrictions) {
 			throw new ArrayIndexOutOfBoundsException(restrictionIndex);
 		}
 		
