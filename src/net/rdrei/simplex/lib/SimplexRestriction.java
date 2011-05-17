@@ -1,6 +1,5 @@
 package net.rdrei.simplex.lib;
 
-import java.lang.reflect.Array;
 
 /**
  * Data structure for storing a standard maximum restriction.
@@ -62,6 +61,10 @@ public class SimplexRestriction {
 			int restrictionCount) {
 		
 		int sourceLength = this.baseVariableCoefficients.length;
+		if (index > sourceLength) {
+			throw new ArrayIndexOutOfBoundsException(index);
+		}
+		
 		int resultLength = sourceLength + restrictionCount;
 		int[] result = new int[resultLength];
 		
