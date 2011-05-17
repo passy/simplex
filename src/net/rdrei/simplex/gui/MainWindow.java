@@ -24,6 +24,7 @@ import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import net.rdrei.simplex.lib.SimplexProblem;
+import net.rdrei.simplex.lib.SimplexRestriction;
 
 public class MainWindow {
 
@@ -90,6 +91,11 @@ public class MainWindow {
 			}
 			
 			String restrictions = "Restrictions: ";
+			for (SimplexRestriction restriction :
+				simplexProblem.getRestrictions()) {
+				
+				restrictions += restriction.toString() + ", ";
+			}
 			JOptionPane.showMessageDialog(mainFrame, variables + " " + restrictions);
 		}
 	};

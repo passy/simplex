@@ -247,20 +247,62 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 
 	@Override
 	public int[] getBaseVariables() {
-		int[] result = new int[numberOfVariables];
+		int[] result = new int[this.numberOfVariables];
 		int i = 0;
 		
-		for (JSpinner spinner : baseVariableSpinners) {
+		for (JSpinner spinner : this.baseVariableSpinners) {
 			result[i++] = (Integer) spinner.getValue();
 		}
 		
 		return result;
 	}
+	
+	/**
+	 * Get the coeffiecients for the restriction addressed by the given index.
+	 * @param restrictionIndex
+	 */
+	public int[] getRestrictionCoefficients(int restrictionIndex) {
+		if (restrictionIndex > this.numberOfVariables) {
+			throw new ArrayIndexOutOfBoundsException(restrictionIndex);
+		}
+		
+		int[] results = new int[this.numberOfVariables];
+		JSpinner[] spinners = 
+			this.restrictionVariableSpinners[restrictionIndex];
+		
+		/*
+		 * We won't use foreach here, because the last element of the array
+		 * contains the equation's right side which is not asked here.
+		 */
+		for (int i = 0; i < this.numberOfVariables; i += 1) {
+			results[i] = (Integer) spinners[i].getValue();
+		}
+		
+		return results;
+	}
 
 	@Override
 	public SimplexRestriction[] getRestrictions() {
-		// TODO Auto-generated method stub
-		return null;
+		SimplexRestriction[] result = 
+			new SimplexRestriction[this.numberOfRestrictions];
+		int i = 0;
+		
+		for (JSpinner[] spinners : this.restrictionVariableSpinners) {
+			int[] baseVariableCoefficients = 
+				this.getRestrictionCoefficients(i);
+			
+			// The last element is the equation's right-side.
+			int restrictionResult = 
+				(Integer) spinners[spinners.length - 1].getValue();
+			
+			SimplexRestriction restriction = new SimplexRestriction(
+					baseVariableCoefficients, restrictionResult);
+			
+			result[i] = restriction;
+			i += 1;
+		}
+		
+		return result;
 	}
 
 }
