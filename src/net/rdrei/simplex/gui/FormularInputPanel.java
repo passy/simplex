@@ -260,7 +260,7 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 	}
 	
 	/**
-	 * Get the coeffiecients for the restriction addressed by the given index.
+	 * Get the coefficients for the restriction addressed by the given index.
 	 * @param restrictionIndex
 	 */
 	public int[] getRestrictionCoefficients(int restrictionIndex) {

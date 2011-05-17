@@ -17,6 +17,14 @@ public class SimplexRestriction {
 	 */
 	private int result;
 
+	/**
+	 * Creates a new standard maximum restriction. Parameters are explained
+	 * on this example:
+	 * 5x1 - 3x2 ≤ 23
+	 * 
+	 * @param baseVariableCoefficients [5, -3]
+	 * @param result 23
+	 */
 	public SimplexRestriction(int[] baseVariableCoefficients, int result) {
 		super();
 		this.baseVariableCoefficients = baseVariableCoefficients;
@@ -33,6 +41,24 @@ public class SimplexRestriction {
 
 	public void setBaseVariableCoefficients(int[] baseVariableCoefficients) {
 		this.baseVariableCoefficients = baseVariableCoefficients;
+	}
+	
+	/**
+	 * Returns an array of coefficients, interpreting the restriction as n-th
+	 * restriction, where index specifies the n adding slack variables.
+	 * 
+	 * E.g. Base restriction: x1 - 3x2 ≤ 5 as 2nd restriction with the 
+	 * identity matrix [[1, 0], [0, 1]].
+	 * 
+	 * With added slag variables the corresponding equation is
+	 * x1 - 3x2 + 0s1 + 1s2 = 5
+	 * 
+	 * @param index The index of the restriction within the restriction
+	 * system, 0-based.
+	 */
+	public int[] getEquationCoefficients(int index) {
+		// TODO: Stub for test.
+		return new int[] {1, 2, 3};
 	}
 
 	public void setResult(int result) {
