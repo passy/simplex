@@ -8,6 +8,7 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 import net.rdrei.simplex.lib.SimplexProblem;
+import net.rdrei.simplex.lib.SimplexRestriction;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -19,15 +20,15 @@ import com.jgoodies.forms.layout.RowSpec;
  *
  */
 public class FormularInputPanel extends JPanel implements SimplexProblem {
-	private static final long serialVersionUID = 1L;
-	
-	private static final short defaultNumberOfVariables = 2;
 	private static final short defaultNumberOfRestrictions = 2;
 	
-	private int numberOfVariables;
-	private int numberOfRestrictions;
+	private static final short defaultNumberOfVariables = 2;
+	private static final long serialVersionUID = 1L;
 	
 	private JSpinner[] baseVariableSpinners;
+	private int numberOfRestrictions;
+	
+	private int numberOfVariables;
 	private JSpinner[][] restrictionVariableSpinners;
 
 	/// Constructor providing the default values for variables and restrictions.
@@ -45,6 +46,20 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 		
 		buildLayout();
 		buildLayoutWidgets();
+	}
+	
+	/**
+	 * Populates the list of spinners for the target function equation.
+	 */
+	private void buildBaseVariableSpinners() {
+		for (int i = 0; i < this.numberOfVariables; i += 1) {
+			JSpinner spinner = new JSpinner();
+			// Set the default value to 1, and step size to 1.
+			SpinnerNumberModel model = new SpinnerNumberModel(1, null,
+					null, 1);
+			spinner.setModel(model);
+			this.baseVariableSpinners[i] = spinner;
+		}
 	}
 	
 	/**
@@ -70,28 +85,6 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 		}
 		
 		builder.append(") = ");
-		return builder.toString();
-	}
-	
-	/**
-	 * Create a String for the given count of variables representing
-	 * the not negativity restriction.
-	 * e.g. x1, x2, x3 ≥ 0
-	 */
-	private String buildNNR() {
-		StringBuilder builder = new StringBuilder();
-		for (int i = 1; i <= this.numberOfVariables; i += 1) {
-			builder.append('x');
-			builder.append(i);
-			
-			// For all but the last iteration
-			if (i != this.numberOfVariables) {
-				builder.append(", ");
-			} else {
-				builder.append(" ≥ 0");
-			}
-		}
-		
 		return builder.toString();
 	}
 	
@@ -213,17 +206,25 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 	}
 
 	/**
-	 * Populates the list of spinners for the target function equation.
+	 * Create a String for the given count of variables representing
+	 * the not negativity restriction.
+	 * e.g. x1, x2, x3 ≥ 0
 	 */
-	private void buildBaseVariableSpinners() {
-		for (int i = 0; i < this.numberOfVariables; i += 1) {
-			JSpinner spinner = new JSpinner();
-			// Set the default value to 1, and step size to 1.
-			SpinnerNumberModel model = new SpinnerNumberModel(1, null,
-					null, 1);
-			spinner.setModel(model);
-			this.baseVariableSpinners[i] = spinner;
+	private String buildNNR() {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 1; i <= this.numberOfVariables; i += 1) {
+			builder.append('x');
+			builder.append(i);
+			
+			// For all but the last iteration
+			if (i != this.numberOfVariables) {
+				builder.append(", ");
+			} else {
+				builder.append(" ≥ 0");
+			}
 		}
+		
+		return builder.toString();
 	}
 	
 	/**
@@ -245,12 +246,6 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 	}
 
 	@Override
-	public int getNumberOfBaseVariables() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
 	public int[] getBaseVariables() {
 		int[] result = new int[numberOfVariables];
 		int i = 0;
@@ -263,14 +258,9 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 	}
 
 	@Override
-	public int getNumberOfRestrictions() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int[][] getRestrictions() {
+	public SimplexRestriction[] getRestrictions() {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
