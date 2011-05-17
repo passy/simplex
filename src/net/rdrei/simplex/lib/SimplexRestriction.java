@@ -1,5 +1,7 @@
 package net.rdrei.simplex.lib;
 
+import java.lang.reflect.Array;
+
 /**
  * Data structure for storing a standard maximum restriction.
  * 
@@ -47,7 +49,7 @@ public class SimplexRestriction {
 	 * Returns an array of coefficients, interpreting the restriction as n-th
 	 * restriction, where index specifies the n adding slack variables.
 	 * 
-	 * E.g. Base restriction: x1 - 3x2 ≤ 5 as 2nd restriction with the 
+	 * E.g. Base restriction: x1 - 3x2 ≤ 5 as 2nd restriction of two with the 
 	 * identity matrix [[1, 0], [0, 1]].
 	 * 
 	 * With added slag variables the corresponding equation is
@@ -56,9 +58,31 @@ public class SimplexRestriction {
 	 * @param index The index of the restriction within the restriction
 	 * system, 0-based.
 	 */
-	public int[] getEquationCoefficients(int index) {
-		// TODO: Stub for test.
-		return new int[] {1, 2, 3};
+	public int[] getEquationCoefficientsForIndex(int index,
+			int restrictionCount) {
+		
+		int sourceLength = this.baseVariableCoefficients.length;
+		int resultLength = sourceLength + restrictionCount;
+		int[] result = new int[resultLength];
+		
+		// Copy the base variables.
+		System.arraycopy(this.baseVariableCoefficients, 0, result,
+				0, this.baseVariableCoefficients.length);
+		
+		// Insert the slag variables.
+		for (int i = 0; i < restrictionCount; i += 1) {
+			int value;
+			
+			if (i == index) {
+				value = 1;
+			} else {
+				value = 0;
+			}
+			
+			result[i + sourceLength] = value;
+		}
+		
+		return result;
 	}
 
 	public void setResult(int result) {
