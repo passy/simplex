@@ -9,6 +9,7 @@ import javax.swing.SpinnerNumberModel;
 
 import net.rdrei.simplex.lib.SimplexProblem;
 import net.rdrei.simplex.lib.SimplexRestriction;
+import net.rdrei.simplex.lib.SimplexRestrictionSet;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -284,9 +285,8 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 	}
 
 	@Override
-	public SimplexRestriction[] getRestrictions() {
-		SimplexRestriction[] result = 
-			new SimplexRestriction[this.numberOfRestrictions];
+	public SimplexRestrictionSet getRestrictionSet() {
+		SimplexRestrictionSet restrictions = new SimplexRestrictionSet();
 		int i = 0;
 		
 		for (JSpinner[] spinners : this.restrictionVariableSpinners) {
@@ -300,11 +300,10 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 			SimplexRestriction restriction = new SimplexRestriction(
 					baseVariableCoefficients, restrictionResult);
 			
-			result[i] = restriction;
+			restrictions.add(restriction);
 			i += 1;
 		}
 		
-		return result;
+		return restrictions;
 	}
-
 }

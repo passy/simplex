@@ -92,7 +92,7 @@ public class MainWindow {
 			
 			String restrictions = "Restrictions: ";
 			for (SimplexRestriction restriction :
-				simplexProblem.getRestrictions()) {
+				simplexProblem.getRestrictionSet().getList()) {
 				
 				restrictions += restriction.toString() + ", ";
 			}
