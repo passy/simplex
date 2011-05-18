@@ -7,7 +7,7 @@ import java.util.Iterator;
  * An ordered list of restrictions building a restriction set.
  * @author pascal
  */
-public class SimplexRestrictionSet implements Iterable<SimplexRestriction> {
+public class SimplexRestrictionSet implements Iterable<EnumeratedSimplexRestriction> {
 	ArrayList<SimplexRestriction> list;
 
 	public SimplexRestrictionSet() {
@@ -19,12 +19,17 @@ public class SimplexRestrictionSet implements Iterable<SimplexRestriction> {
 	public void add(SimplexRestriction restriction) {
 		this.list.add(restriction);
 	}
+	
+	public int size() {
+		return this.list.size();
+	}
+	
+	public ArrayList<SimplexRestriction> getList() {
+		return list;
+	}
 
 	@Override
-	public Iterator<SimplexRestriction> iterator() {
-		// This is really useless this way. We need a way to access the
-		// coefficients and results easily, otherwise this whole class does
-		// not really have a point.
-		return list.iterator();
+	public Iterator<EnumeratedSimplexRestriction> iterator() {
+		return new EnumeratedSimplexRestrictionIterator(this);
 	}
 }

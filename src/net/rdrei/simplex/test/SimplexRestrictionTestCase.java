@@ -3,6 +3,7 @@ package net.rdrei.simplex.test;
 import junit.framework.TestCase;
 import net.rdrei.simplex.lib.EnumeratedSimplexRestriction;
 import net.rdrei.simplex.lib.SimplexRestriction;
+import net.rdrei.simplex.lib.SimplexRestrictionSet;
 
 import org.junit.Test;
 
@@ -72,5 +73,35 @@ public class SimplexRestrictionTestCase {
 		TestCase.assertEquals(coeffs[2], 0);
 		TestCase.assertEquals(coeffs[3], 0);
 		TestCase.assertEquals(coeffs[4], 1);
+	}
+	
+	@Test
+	public void simplexRestrictionSetIterator() {
+		SimplexRestriction restrict1 = new SimplexRestriction(
+			new int[] {2, 1}, 5
+		);
+		SimplexRestriction restrict2 = new SimplexRestriction(
+			new int[] {1, -4}, 3
+		);
+		
+		SimplexRestrictionSet rset = new SimplexRestrictionSet();
+		rset.add(restrict1);
+		rset.add(restrict2);
+		
+		int[][] identity = new int[2][2];
+		int i = 0;
+		for (EnumeratedSimplexRestriction restriction : rset) {
+			int[] coefficients 	= restriction.getEquationCoefficients();
+			TestCase.assertEquals(i, restriction.getIndex());
+			identity[i][0] = coefficients[2];
+			identity[i][1] = coefficients[3];
+			
+			i += 1;
+		}
+		
+		TestCase.assertEquals(1, identity[0][0]);
+		TestCase.assertEquals(0, identity[0][1]);
+		TestCase.assertEquals(0, identity[1][0]);
+		TestCase.assertEquals(1, identity[1][1]);
 	}
 }
