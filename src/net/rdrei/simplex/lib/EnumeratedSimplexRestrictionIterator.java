@@ -31,8 +31,7 @@ public class EnumeratedSimplexRestrictionIterator implements Iterator<Enumerated
 
 	@Override
 	public void remove() {
-		throw new RuntimeException("remove() is not implemented for " + 
-				"EnumeratedSimplexRestrictionInterator");
+		throw new UnsupportedOperationException();
 	}
 	
 }
