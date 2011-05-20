@@ -41,7 +41,7 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 		this.numberOfVariables = numberOfVariables;
 		this.numberOfRestrictions = numberOfRestrictions;
 		
-		this.baseVariableSpinners = new JSpinner[numberOfVariables + 1];
+		this.baseVariableSpinners = new JSpinner[numberOfVariables];
 		this.restrictionVariableSpinners = 
 			new JSpinner[numberOfRestrictions][numberOfVariables + 1];
 		
@@ -53,9 +53,8 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 	 * Populates the list of spinners for the target function equation.
 	 */
 	private void buildBaseVariableSpinners() {
-		// Notice we create one more than for each variable, because we have
-		// a constant remainder.
-		for (int i = 0; i <= this.numberOfVariables; i += 1) {
+		// Create one spinner for each coefficient.
+		for (int i = 0; i < this.numberOfVariables; i += 1) {
 			JSpinner spinner = new JSpinner();
 			// Set the default value to 1, and step size to 1.
 			SpinnerNumberModel model = new SpinnerNumberModel(1, null,
@@ -142,16 +141,17 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 				// The coordinates require that the above column count
 				// calculations were correct. Otherwise we might run into
 				// a NullPointer condition here.
-				int xCoord = (4 + 4 * (i));
+				int xCoord = (4 + 4 * i);
 				add(spinner, String.format("%d, 6", xCoord));
 				
-				// The label is only necessary for all but the last elements.
-				// e.g. [s]x1 + [s]x2 + [s]
-				if (i != spinnerCount - 1) {
-					String varName = "x" + (i + 1) + " +";
-					JLabel varLabel = new JLabel(varName);
-					add(varLabel, String.format("%d, 6", xCoord + 2));
+				String varName = "x" + (i + 1);
+				
+				// Plus signs as connector if it's not the last one.
+				if (i < spinnerCount - 1) {
+					varName += " +";
 				}
+				JLabel varLabel = new JLabel(varName);
+				add(varLabel, String.format("%d, 6", xCoord + 2));
 			}
 		}
 		
