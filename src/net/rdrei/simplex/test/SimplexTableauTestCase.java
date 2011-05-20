@@ -1,5 +1,8 @@
 package net.rdrei.simplex.test;
 
+import junit.framework.TestCase;
+
+import org.junit.Assert;
 import org.junit.Test;
 
 import net.rdrei.simplex.lib.InitialSimplexTableau;
@@ -36,6 +39,24 @@ public class SimplexTableauTestCase {
 	}
 	
 	
+	class InitialSimplexTableauMock extends InitialSimplexTableau {
+		private SimplexProblem problem;
+		
+		public InitialSimplexTableauMock(SimplexProblem problem) {
+			super(problem);
+			this.problem = problem;
+		}
+
+		/**
+		 * Overrides the 'protected' visibility. I don't know how
+		 * to do this properly in java, unfortunately.
+		 */
+		public int[] _getTargetFunctionCoefficients() {
+			return this.getTargetFunctionCoefficients(this.problem);
+		}
+	}
+	
+	
 	/**
 	 * Test fixture for a valid simplex problem.
 	 */
@@ -62,6 +83,28 @@ public class SimplexTableauTestCase {
 	public void createInitialSimplexTableau() {
 		SimplexProblem problem = this.getSimplexProblem();
 		SimplexTableau tabl = new InitialSimplexTableau(problem);
-		System.out.println(tabl);
+		
+		String output = "" +
+		"--------------------------------------------------------\n" +
+		"1.0\t0.0\t1.0\t0.0\t0.0\t0.0\t10.0\t\n" +
+		"0.0\t1.0\t0.0\t1.0\t0.0\t0.0\t6.0\t\n" +
+		"2.0\t4.0\t0.0\t0.0\t1.0\t0.0\t32.0\t\n" +
+		"-30.0\t-20.0\t0.0\t0.0\t0.0\t1.0\t0.0\t\n" +
+		"--------------------------------------------------------";
+		
+		TestCase.assertEquals(output, tabl.toString());
+	}
+	
+	@Test
+	public void getTargetFunctionCoefficients() {
+		SimplexProblem problem = this.getSimplexProblem();
+		InitialSimplexTableauMock tabl =
+			new InitialSimplexTableauMock(problem);
+		
+		int[] results = tabl._getTargetFunctionCoefficients();
+		int[] expecteds = new int[] {
+				-30, -20, 0, 0, 0, 1
+		};
+		Assert.assertArrayEquals(expecteds, results);
 	}
 }

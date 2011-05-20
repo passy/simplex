@@ -70,11 +70,16 @@ public class InitialSimplexTableau extends SimplexTableau {
 	 */
 	protected int[] getTargetFunctionCoefficients(SimplexProblem problem) {
 		int[] baseVariables = problem.getBaseVariables();
-		int length = baseVariables.length;
+		int restrictionCount = problem.getRestrictionSet().size();
+		int length = baseVariables.length + restrictionCount;
 		int results[] = new int[length + 1];
 		
-		for (int i = 0; i < length; i += 1) {
-			results[i] = -1 * length;
+		for (int i = 0; i < baseVariables.length; i += 1) {
+			results[i] = -1 * baseVariables[i];
+		}
+		
+		for (int i = 0; i < restrictionCount; i += 1) {
+			results[baseVariables.length + i] = 0;
 		}
 		
 		// Last element
