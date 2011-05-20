@@ -17,7 +17,24 @@ public class SimplexRestrictionSet implements Iterable<EnumeratedSimplexRestrict
 	}
 	
 	public void add(SimplexRestriction restriction) {
+		this.checkCount(restriction);
 		this.list.add(restriction);
+	}
+	
+	/**
+	 * Check whether the given SimplexRestriction can be stored in this
+	 * set, i.e. the variable count matches the previous restrictions'.
+	 */
+	private void checkCount(SimplexRestriction restriction) {
+		if (this.list.size() == 0) {
+			return;
+		}
+		
+		if (this.list.get(0).getBaseVariablesCount() !=
+			restriction.getBaseVariablesCount()) {
+			throw new RuntimeException("Given restriction does not match " +
+					"the expected count of base variables for this set.");
+		}
 	}
 	
 	public int size() {
