@@ -104,4 +104,27 @@ public class SimplexRestrictionTestCase {
 		TestCase.assertEquals(0, identity[1][0]);
 		TestCase.assertEquals(1, identity[1][1]);
 	}
+	
+	/**
+	 * Add two restrictions with different base variable count.
+	 */
+	@Test
+	public void simplexRestrictionSetUnmatch() {
+		boolean excepted = false;
+		
+		SimplexRestriction rest1 = new SimplexRestriction(new int[]{1, 0, 1},
+				10);
+		SimplexRestriction rest2 = new SimplexRestriction(new int[]{0, 1},
+				6);
+		
+		SimplexRestrictionSet rset = new SimplexRestrictionSet();
+		rset.add(rest1);
+		try {
+			rset.add(rest2);
+		} catch (RuntimeException e) {
+			excepted = true;
+		}
+		
+		TestCase.assertTrue(excepted);
+	}
 }

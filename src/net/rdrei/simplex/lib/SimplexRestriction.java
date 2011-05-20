@@ -39,6 +39,10 @@ public class SimplexRestriction {
 	public int getResult() {
 		return result;
 	}
+	
+	public int getBaseVariablesCount() {
+		return this.baseVariableCoefficients.length;
+	}
 
 	public void setBaseVariableCoefficients(int[] baseVariableCoefficients) {
 		this.baseVariableCoefficients = baseVariableCoefficients;
