@@ -26,17 +26,20 @@ public class SimplexTableau {
 	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < this.columnCount; i += 1) {
+		for (int i = 0; i < this.columnCount * 8; i += 1) {
 			result.append('-');
-			
-			for (int j = 0; j < this.rowCount; j += 1) {
-				result.append('\t');				
-				result.append(this.cells[i][j]);
+		}
+		result.append('\n');
+		
+		for (int i = 0; i < this.rowCount; i += 1) {
+			for (int j = 0; j < this.columnCount; j += 1) {
+				result.append(this.cells[j][i]);
 				result.append('\t');
 			}
+			result.append('\n');
 		}
 		
-		for (int i = 0; i < this.columnCount; i += 1) {
+		for (int i = 0; i < this.columnCount * 8; i += 1) {
 			result.append('-');
 		}
 		
