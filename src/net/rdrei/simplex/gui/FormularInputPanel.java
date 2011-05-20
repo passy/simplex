@@ -240,8 +240,15 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 			for (int j = 0; j <= this.numberOfVariables; j += 1) {
 				JSpinner spinner = new JSpinner();
 				// Set the default value to 1, and step size to 1.
-				SpinnerNumberModel model = new SpinnerNumberModel(1, null,
-						null, 1);
+				SpinnerNumberModel model;
+				
+				if (j < (this.numberOfVariables)) {
+					model = new SpinnerNumberModel(1, null, null, 1);
+				} else {
+					// The right hand side must be ≥ 0 for SMP.
+					model = new SpinnerNumberModel(3, 0, null, 1);
+				}
+				
 				spinner.setModel(model);
 				this.restrictionVariableSpinners[i][j] = spinner;
 			}
@@ -250,7 +257,7 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 
 	@Override
 	public int[] getBaseVariables() {
-		int[] result = new int[this.numberOfVariables + 1];
+		int[] result = new int[this.numberOfVariables];
 		int i = 0;
 		
 		for (JSpinner spinner : this.baseVariableSpinners) {
