@@ -10,6 +10,7 @@ public class InitialSimplexTableau extends SimplexTableau {
 		// Pass on to the next constructor.
 		this(problem.getRestrictionSet(), problem.getBaseVariables());
 		this.loadFromProblem(problem);
+		this.initializeBaseVariables(problem);
 	}
 	
 	/**
@@ -86,5 +87,13 @@ public class InitialSimplexTableau extends SimplexTableau {
 		results[length] = 1;
 		
 		return results;
+	}
+	
+	/**
+	 * Fill the base variables array with slag variables.
+	 */
+	private void initializeBaseVariables(SimplexProblem problem) {
+		for (int i = 0; i < problem.getBaseVariables().length; i += 1)
+		this.baseVariables[i] = new SimplexBaseVariable(i, true);
 	}
 }

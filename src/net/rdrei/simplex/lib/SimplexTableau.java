@@ -1,7 +1,15 @@
 package net.rdrei.simplex.lib;
 
 public class SimplexTableau {
+	/**
+	 * Stores all the field values in the complete tableau, except for the 
+	 * q_i value as it's not really part of the table.
+	 */
 	protected float[][] cells;
+	/**
+	 * Stores the variables in the base of the current tableau.
+	 */
+	protected SimplexBaseVariable[] baseVariables;
 	int columnCount;
 	int rowCount;
 
@@ -14,6 +22,7 @@ public class SimplexTableau {
 		this.rowCount = restrictionCount + 1;
 		this.columnCount = baseVariableCount + restrictionCount + 2;
 		this.cells = new float[this.columnCount][this.rowCount];
+		this.baseVariables = new SimplexBaseVariable[this.rowCount];
 	}
 	
 	protected int getColumnCount() {
