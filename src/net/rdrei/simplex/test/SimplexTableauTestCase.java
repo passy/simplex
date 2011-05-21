@@ -60,7 +60,7 @@ public class SimplexTableauTestCase {
 	/**
 	 * Test fixture for a valid simplex problem.
 	 */
-	public SimplexProblem getSimplexProblem() {
+	private SimplexProblem getSimplexProblem() {
 		SimplexRestriction rest1 = new SimplexRestriction(new int[]{1, 0},
 				10);
 		SimplexRestriction rest2 = new SimplexRestriction(new int[]{0, 1},
@@ -77,6 +77,14 @@ public class SimplexTableauTestCase {
 		SimplexProblem result = new SimplexProblemMock(baseVariables,
 				restrictionSet);
 		return result;
+	}
+	
+	private InitialSimplexTableauMock getSimplexTableau() {
+		SimplexProblem problem = this.getSimplexProblem();
+		InitialSimplexTableauMock tabl =
+			new InitialSimplexTableauMock(problem);
+		
+		return tabl;
 	}
 	
 	@Test
@@ -97,14 +105,26 @@ public class SimplexTableauTestCase {
 	
 	@Test
 	public void getTargetFunctionCoefficients() {
-		SimplexProblem problem = this.getSimplexProblem();
-		InitialSimplexTableauMock tabl =
-			new InitialSimplexTableauMock(problem);
-		
+		InitialSimplexTableauMock tabl = this.getSimplexTableau();
 		int[] results = tabl._getTargetFunctionCoefficients();
 		int[] expecteds = new int[] {
 				-30, -20, 0, 0, 0, 1
 		};
 		Assert.assertArrayEquals(expecteds, results);
+	}
+	
+	@Test
+	public void getPivotColumn() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		
+		int pivotColumn = tabl.getPivotColumn();
+		Assert.assertEquals(0, pivotColumn);
+	}
+	
+	@Test
+	public void isOptimal() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		
+		Assert.assertFalse(tabl.isOptimal());
 	}
 }

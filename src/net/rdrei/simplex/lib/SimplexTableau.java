@@ -24,6 +24,35 @@ public class SimplexTableau {
 		return rowCount;
 	}
 	
+	/**
+	 * Get the column with the highest negative coefficient in the target
+	 * function. If there is no negative coefficient, -1 is returned and the
+	 * tableau is optimal.
+	 * @return positive index (0-based) or -1 if tableau is optimal.
+	 */
+	public int getPivotColumn() {
+		int min = -1;
+		int row = this.rowCount - 1;
+		// The relevant coefficients include the base variables and not-base
+		// variables, so all values except for the last two.
+		for (int i = 0; i < this.columnCount - 2; i += 1) {
+			float value = this.cells[i][row];
+			if (value < 0) {
+				if (min == -1) {
+					min = i;
+				} else if (this.cells[min][row] > value) {
+					min = i;					
+				}
+			}
+		}
+		
+		return min;
+	}
+	
+	public boolean isOptimal() {
+		return this.getPivotColumn() == -1;
+	}
+	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		for (int i = 0; i < this.columnCount * 8; i += 1) {
