@@ -1,5 +1,7 @@
 package net.rdrei.simplex.lib;
 
+import java.util.HashMap;
+
 public class SimplexTableau {
 	/**
 	 * Stores all the field values in the complete tableau, except for the 
@@ -82,5 +84,41 @@ public class SimplexTableau {
 		}
 		
 		return result.toString();
+	}
+	
+	/**
+	 * Returns the base result vector of the current tableu.
+	 * @return key is the name of the variable (like x1, s2, Z, ...) and
+	 * the value is the corresponding value of the solution vector.
+	 */
+	public HashMap<String, Float> getBaseResult() {
+		// Set the initial capacity to the column count without the b-column.
+		HashMap<String, Float> result =
+			new HashMap<String, Float>(this.columnCount - 1);
+		
+		// Iterate through the base and result row.
+		for (int i = 0; i < this.rowCount; i += 1) {
+			String key;
+			// Access the last column with the current row index.
+			float value = this.cells[this.columnCount - 1][i];
+			if (i < (this.rowCount - 1)) {
+				// The base variables
+				key = this.baseVariables[i].toString();				
+			} else {
+				// The target function.
+				key = "Z";
+			}
+			
+			result.put(key, value);
+		}
+		
+		// XXX: This does not work. I have no good way to figure out which
+		// variables are NOT in the base and are 0. The list should probably
+		// better contain all variables, not only those from the base, and be
+		// orderes so that the first (rowCount - 1) elements are in the base
+		// and the correct order. Alternatively, the order could be an
+		// attribute.
+		
+		return result;
 	}
 }
