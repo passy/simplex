@@ -1,5 +1,6 @@
 package net.rdrei.simplex.lib;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class SimplexTableau {
@@ -11,20 +12,24 @@ public class SimplexTableau {
 	/**
 	 * Stores the variables in the base of the current tableau.
 	 */
-	protected SimplexBaseVariable[] baseVariables;
-	int columnCount;
-	int rowCount;
+	protected SimplexVariable[] variables;
+	protected int columnCount;
+	protected int rowCount;
+	protected int restrictionCount;
+	protected int problemVariableCount;
 
-	protected SimplexTableau(int restrictionCount, int baseVariableCount) {
+	protected SimplexTableau(int restrictionCount, int problemVariableCount) {
 		super();
 		
 		// Rows is one for each restriction plus the target function
 		// Columns is one for each base variable + the not-base variables + 
 		// target column and the equation's right side.
+		this.problemVariableCount = problemVariableCount;
+		this.restrictionCount = restrictionCount;
 		this.rowCount = restrictionCount + 1;
-		this.columnCount = baseVariableCount + restrictionCount + 2;
+		this.columnCount = problemVariableCount + restrictionCount + 2;
 		this.cells = new float[this.columnCount][this.rowCount];
-		this.baseVariables = new SimplexBaseVariable[this.rowCount];
+		this.variables = new SimplexVariable[this.rowCount];
 	}
 	
 	protected int getColumnCount() {
@@ -86,12 +91,21 @@ public class SimplexTableau {
 		return result.toString();
 	}
 	
+	protected void orderVariables() {
+		// This is obviously not thread-safe as this stores the information
+		// unlocked in the object context.
+		Arrays.sort(this.variables);
+	}
+	
 	/**
-	 * Returns the base result vector of the current tableu.
+	 * Returns the base result vector of the current tableau.
 	 * @return key is the name of the variable (like x1, s2, Z, ...) and
 	 * the value is the corresponding value of the solution vector.
 	 */
 	public HashMap<String, Float> getBaseResult() {
+		// We need the variables to be ordered by there index in order
+		// to find out which are in the base and which aren't.
+		this.orderVariables();
 		// Set the initial capacity to the column count without the b-column.
 		HashMap<String, Float> result =
 			new HashMap<String, Float>(this.columnCount - 1);
@@ -103,7 +117,7 @@ public class SimplexTableau {
 			float value = this.cells[this.columnCount - 1][i];
 			if (i < (this.rowCount - 1)) {
 				// The base variables
-				key = this.baseVariables[i].toString();				
+				key = this.variables[i].toString();				
 			} else {
 				// The target function.
 				key = "Z";
@@ -112,12 +126,13 @@ public class SimplexTableau {
 			result.put(key, value);
 		}
 		
-		// XXX: This does not work. I have no good way to figure out which
-		// variables are NOT in the base and are 0. The list should probably
-		// better contain all variables, not only those from the base, and be
-		// orderes so that the first (rowCount - 1) elements are in the base
-		// and the correct order. Alternatively, the order could be an
-		// attribute.
+		// Iterate through the not-base variables which are 0.
+		// We iterate
+		for (int i = 0; i < this.restrictionCount; i += 1) {
+			String key;
+			key = this.variables[this.problemVariableCount + i].toString();
+			result.put(key, 0f);			
+		}
 		
 		return result;
 	}

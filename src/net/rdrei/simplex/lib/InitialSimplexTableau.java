@@ -94,6 +94,6 @@ public class InitialSimplexTableau extends SimplexTableau {
 	 */
 	private void initializeBaseVariables(SimplexProblem problem) {
 		for (int i = 0; i < problem.getBaseVariables().length; i += 1)
-		this.baseVariables[i] = new SimplexBaseVariable(i, true);
+		this.baseVariables[i] = new SimplexVariable(i, true);
 	}
 }
