@@ -1,5 +1,9 @@
 package net.rdrei.simplex.test;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Set;
+
 import junit.framework.TestCase;
 
 import org.junit.Assert;
@@ -126,5 +130,25 @@ public class SimplexTableauTestCase {
 		SimplexTableau tabl = this.getSimplexTableau();
 		
 		Assert.assertFalse(tabl.isOptimal());
+	}
+	
+	/**
+	 * Receive and validate a base result from the initial tableau.
+	 */
+	@Test
+	public void getBaseResult() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		HashMap<String, Float> results = tabl.getBaseResult();
+		
+		Assert.assertEquals(6, results.size());
+		Set<String> keys = results.keySet();
+		Collection<Float> values = results.values();
+		
+		Assert.assertArrayEquals(new String[] {
+			"s2", "s1", "x2", "s3", "x1", "Z"
+		}, keys.toArray());
+		Assert.assertArrayEquals(new Float[] {
+			6f, 10f, 0f, 32f, 0f, 0f
+		}, values.toArray());
 	}
 }

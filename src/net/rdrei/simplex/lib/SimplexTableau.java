@@ -29,7 +29,9 @@ public class SimplexTableau {
 		this.rowCount = restrictionCount + 1;
 		this.columnCount = problemVariableCount + restrictionCount + 2;
 		this.cells = new float[this.columnCount][this.rowCount];
-		this.variables = new SimplexVariable[this.rowCount];
+		this.variables =
+			new SimplexVariable[this.problemVariableCount +
+	    		                this.restrictionCount];
 	}
 	
 	protected int getColumnCount() {
@@ -128,9 +130,9 @@ public class SimplexTableau {
 		
 		// Iterate through the not-base variables which are 0.
 		// We iterate
-		for (int i = 0; i < this.restrictionCount; i += 1) {
+		for (int i = 0; i < this.problemVariableCount; i += 1) {
 			String key;
-			key = this.variables[this.problemVariableCount + i].toString();
+			key = this.variables[this.restrictionCount + i].toString();
 			result.put(key, 0f);			
 		}
 		

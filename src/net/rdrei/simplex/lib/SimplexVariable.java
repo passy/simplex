@@ -11,17 +11,31 @@ public class SimplexVariable implements Comparable<SimplexVariable> {
 	 */
 	private int index;
 	private boolean isSlag = false;
-	private final char slagSymbol = 's';
+	/**
+	 * The position of the element, 0-based. If it's in the base for the 
+	 * second restriction, it' 1.
+	 */
+	private int position;
+
 	private final char problemSymbol = 'x';
-	
-	public SimplexVariable(int index, boolean isSlag) {
+
+	private final char slagSymbol = 's';
+	public SimplexVariable(int index, int position, boolean isSlag) {
 		super();
 		this.setIndex(index);
 		this.setSlag(isSlag);
 	}
+	@Override
+	public int compareTo(SimplexVariable o) {
+		return this.getPosition() - o.getPosition();
+	}
+	
+	public int getIndex() {
+		return index;
+	}
 
-	public void setSlag(boolean isSlag) {
-		this.isSlag = isSlag;
+	public int getPosition() {
+		return position;
 	}
 
 	public boolean isSlag() {
@@ -32,10 +46,14 @@ public class SimplexVariable implements Comparable<SimplexVariable> {
 		this.index = index;
 	}
 
-	public int getIndex() {
-		return index;
+	public void setPosition(int position) {
+		this.position = position;
 	}
 	
+	public void setSlag(boolean isSlag) {
+		this.isSlag = isSlag;
+	}
+
 	public String toString() {
 		char symbol;
 		if (this.isSlag) {
@@ -45,10 +63,5 @@ public class SimplexVariable implements Comparable<SimplexVariable> {
 		}
 		
 		return "" + symbol + (this.index + 1);
-	}
-
-	@Override
-	public int compareTo(SimplexVariable o) {
-		return this.getIndex() - o.getIndex();
 	}
 }
