@@ -67,12 +67,16 @@ public class SimplexTableau {
 		return min;
 	}
 	
+	/**
+	 * Shortcut to check for the optimum criteria.
+	 */
 	public boolean isOptimal() {
 		return this.getPivotColumn() == -1;
 	}
 	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
+		// Some separation line
 		for (int i = 0; i < this.columnCount * 8; i += 1) {
 			result.append('-');
 		}
@@ -86,6 +90,7 @@ public class SimplexTableau {
 			result.append('\n');
 		}
 		
+		// Another separation line.
 		for (int i = 0; i < this.columnCount * 8; i += 1) {
 			result.append('-');
 		}
@@ -129,7 +134,6 @@ public class SimplexTableau {
 		}
 		
 		// Iterate through the not-base variables which are 0.
-		// We iterate
 		for (int i = 0; i < this.problemVariableCount; i += 1) {
 			String key;
 			key = this.variables[this.restrictionCount + i].toString();
