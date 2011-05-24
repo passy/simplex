@@ -10,7 +10,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import net.rdrei.simplex.lib.InitialSimplexTableau;
+import net.rdrei.simplex.lib.PivotElement;
 import net.rdrei.simplex.lib.SimplexPivotException;
+import net.rdrei.simplex.lib.SimplexPivotStep;
 import net.rdrei.simplex.lib.SimplexProblem;
 import net.rdrei.simplex.lib.SimplexRestriction;
 import net.rdrei.simplex.lib.SimplexRestrictionSet;
@@ -164,5 +166,49 @@ public class SimplexTableauTestCase {
 			e.printStackTrace();
 			Assert.fail(e.toString());
 		}
+	}
+	
+	@Test
+	public void pivotStepMakesPivotElementOne() {
+		// XXX: This forged table might fail after the step is completely
+		// implemented.
+		float[][] cells = new float[2][2];
+		cells[0][0] = 1;
+		cells[0][1] = 2;
+		cells[1][0] = 3;
+		cells[1][1] = 4;
+		
+		SimplexPivotStep step = new SimplexPivotStep(cells,
+				new PivotElement(1, 1));
+		float[][] newCells = step.run();
+		
+		Assert.assertEquals(1, newCells[1][1], 0);
+	}
+	
+	@Test
+	public void testFirstSimplexStep() throws SimplexPivotException {
+		SimplexTableau tabl = this.getSimplexTableau();
+		float[][] cells = tabl.getCells();
+		
+		// Not a good unit test. This is not the test's subject, but we could
+		// count this as an integration test, I guess.
+		PivotElement pElement = new PivotElement(tabl.getPivotColumn(),
+				tabl.getPivotRow());
+		SimplexPivotStep step = new SimplexPivotStep(cells, pElement);
+		
+		Assert.assertEquals(0, pElement.getX());
+		Assert.assertEquals(0, pElement.getY());
+		
+		float[][] newCells = step.run();
+		
+		// Pivot element is 1.
+		Assert.assertEquals(newCells[0][0], 1, 0);
+		// Everything thing else in the column is 0. Starting
+		// with 2, because 1 is 0 in the first place.
+		Assert.assertEquals(newCells[0][2], 0, 0);
+		Assert.assertEquals(newCells[0][3], 0, 0);
+		
+		// Now check the results of the circle rule.
+		
 	}
 }

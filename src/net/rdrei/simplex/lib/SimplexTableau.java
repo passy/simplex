@@ -9,15 +9,15 @@ public class SimplexTableau {
 	 * q_i value as it's not really part of the table.
 	 */
 	protected float[][] cells;
+	protected int columnCount;
+
+	protected int problemVariableCount;
+	protected int restrictionCount;
+	protected int rowCount;
 	/**
 	 * Stores the variables in the base of the current tableau.
 	 */
 	protected SimplexVariable[] variables;
-	protected int columnCount;
-	protected int rowCount;
-	protected int restrictionCount;
-	protected int problemVariableCount;
-
 	protected SimplexTableau(int restrictionCount, int problemVariableCount) {
 		super();
 		
@@ -33,13 +33,52 @@ public class SimplexTableau {
 			new SimplexVariable[this.problemVariableCount +
 	    		                this.restrictionCount];
 	}
+
+	/**
+	 * Returns the base result vector of the current tableau.
+	 * @return key is the name of the variable (like x1, s2, Z, ...) and
+	 * the value is the corresponding value of the solution vector.
+	 */
+	public HashMap<String, Float> getBaseResult() {
+		// We need the variables to be ordered by there index in order
+		// to find out which are in the base and which aren't.
+		this.orderVariables();
+		// Set the initial capacity to the column count without the b-column.
+		HashMap<String, Float> result =
+			new HashMap<String, Float>(this.columnCount - 1);
+		
+		// Iterate through the base and result row.
+		for (int i = 0; i < this.rowCount; i += 1) {
+			String key;
+			// Access the last column with the current row index.
+			float value = this.cells[this.columnCount - 1][i];
+			if (i < (this.rowCount - 1)) {
+				// The base variables
+				key = this.variables[i].toString();				
+			} else {
+				// The target function.
+				key = "Z";
+			}
+			
+			result.put(key, value);
+		}
+		
+		// Iterate through the not-base variables which are 0.
+		for (int i = 0; i < this.problemVariableCount; i += 1) {
+			String key;
+			key = this.variables[this.restrictionCount + i].toString();
+			result.put(key, 0f);			
+		}
+		
+		return result;
+	}
 	
-	protected int getColumnCount() {
-		return columnCount;
+	public float[][] getCells() {
+		return cells;
 	}
 
-	protected int getRowCount() {
-		return rowCount;
+	protected int getColumnCount() {
+		return columnCount;
 	}
 	
 	/**
@@ -65,13 +104,6 @@ public class SimplexTableau {
 		}
 		
 		return min;
-	}
-	
-	/**
-	 * Shortcut to check for the optimum criteria.
-	 */
-	public boolean isOptimal() {
-		return this.getPivotColumn() == -1;
 	}
 	
 	/**
@@ -130,6 +162,23 @@ public class SimplexTableau {
 		return pivotRow;
 	}
 	
+	protected int getRowCount() {
+		return rowCount;
+	}
+	
+	/**
+	 * Shortcut to check for the optimum criteria.
+	 */
+	public boolean isOptimal() {
+		return this.getPivotColumn() == -1;
+	}
+	
+	protected void orderVariables() {
+		// This is obviously not thread-safe as this stores the information
+		// unlocked in the object context.
+		Arrays.sort(this.variables);
+	}
+	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		// Some separation line
@@ -152,50 +201,5 @@ public class SimplexTableau {
 		}
 		
 		return result.toString();
-	}
-	
-	protected void orderVariables() {
-		// This is obviously not thread-safe as this stores the information
-		// unlocked in the object context.
-		Arrays.sort(this.variables);
-	}
-	
-	/**
-	 * Returns the base result vector of the current tableau.
-	 * @return key is the name of the variable (like x1, s2, Z, ...) and
-	 * the value is the corresponding value of the solution vector.
-	 */
-	public HashMap<String, Float> getBaseResult() {
-		// We need the variables to be ordered by there index in order
-		// to find out which are in the base and which aren't.
-		this.orderVariables();
-		// Set the initial capacity to the column count without the b-column.
-		HashMap<String, Float> result =
-			new HashMap<String, Float>(this.columnCount - 1);
-		
-		// Iterate through the base and result row.
-		for (int i = 0; i < this.rowCount; i += 1) {
-			String key;
-			// Access the last column with the current row index.
-			float value = this.cells[this.columnCount - 1][i];
-			if (i < (this.rowCount - 1)) {
-				// The base variables
-				key = this.variables[i].toString();				
-			} else {
-				// The target function.
-				key = "Z";
-			}
-			
-			result.put(key, value);
-		}
-		
-		// Iterate through the not-base variables which are 0.
-		for (int i = 0; i < this.problemVariableCount; i += 1) {
-			String key;
-			key = this.variables[this.restrictionCount + i].toString();
-			result.put(key, 0f);			
-		}
-		
-		return result;
 	}
 }
