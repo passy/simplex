@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import net.rdrei.simplex.lib.InitialSimplexTableau;
+import net.rdrei.simplex.lib.SimplexPivotException;
 import net.rdrei.simplex.lib.SimplexProblem;
 import net.rdrei.simplex.lib.SimplexRestriction;
 import net.rdrei.simplex.lib.SimplexRestrictionSet;
@@ -150,5 +151,18 @@ public class SimplexTableauTestCase {
 		Assert.assertArrayEquals(new Float[] {
 			6f, 10f, 0f, 32f, 0f, 0f
 		}, values.toArray());
+	}
+	
+	@Test
+	public void getPivotRow() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		int row;
+		try {
+			row = tabl.getPivotRow();
+			Assert.assertEquals(0, row);
+		} catch (SimplexPivotException e) {
+			e.printStackTrace();
+			Assert.fail(e.toString());
+		}
 	}
 }

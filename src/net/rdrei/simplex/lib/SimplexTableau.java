@@ -74,6 +74,62 @@ public class SimplexTableau {
 		return this.getPivotColumn() == -1;
 	}
 	
+	/**
+	 * Access the pivot row without prior knowledge of the pivot column.
+	 * For performance reasons, it's advised you use getPivotRow(int)
+	 * instead.
+	 * @return
+	 * @throws SimplexPivotException 
+	 */
+	public int getPivotRow() throws SimplexPivotException {
+		int pivotColumn = this.getPivotColumn();
+		return getPivotRow(pivotColumn);
+	}
+	
+	/**
+	 * Find the 'bottleneck' condition for the tableau on hand.
+	 * There is an overloaded method over this, not requiring the pivotColumn
+	 * to be provided.
+	 * @param pivotColumn
+	 * @return integer, 0-based index of the pivot row
+	 * @throws SimplexPivotException 
+	 */
+	public int getPivotRow(int pivotColumn) throws SimplexPivotException {
+		int pivotRow = -1;
+		float minimum = 0;
+		
+		// Build q_i = k_i / a_{ik} for each element of the pivot column.
+		for (int i = 0; i < this.restrictionCount; i += 1) {
+			// Variable names correspond to column names x being the pivot
+			// column's value while b is the equation's right side value.
+			float x = this.cells[pivotColumn][i];
+			float b = this.cells[this.columnCount - 1][i];
+			float q;
+			
+			// To pass the bottleneck condition, the element must be positive
+			// and must not be 0.
+			if (x > 0 && b > 0) {
+				q = b / x;
+				
+				// Minimum defaults to 0, which can never be reached.
+				if (minimum == 0 || q < minimum) {
+					// Set new minimum and pivot row.
+					minimum = q;
+					pivotRow = i;
+				}
+			}
+		}
+		
+		// No element matched, raise exception.
+		if (pivotRow == -1) {
+			throw new SimplexPivotException("None of the rows in the " +
+					"given pivot column fulfills the " +
+					"bottleneck restriction.");
+		}
+		
+		return pivotRow;
+	}
+	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		// Some separation line
