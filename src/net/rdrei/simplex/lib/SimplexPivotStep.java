@@ -13,8 +13,8 @@ public class SimplexPivotStep {
 	/**
 	 * Coordinates within the given matrix specifying the pivot element.
 	 */
-	private PivotElement pivotElement;
-	private float pivotValue;
+	private final PivotElement pivotElement;
+	private final float pivotValue;
 	
 	/**
 	 * Initializes the pivot step with a matrix and the coordinates to
@@ -45,6 +45,7 @@ public class SimplexPivotStep {
 	 * @return new tableau
 	 */
 	public float[][] run() {
+		this.runCircleRule();
 		this.divideRow();
 		this.createUnitVector();
 		return this.cells;
@@ -67,8 +68,8 @@ public class SimplexPivotStep {
 	 * Create a unit vector in the pivot column.
 	 */
 	private void createUnitVector() {
-		int column = this.pivotElement.getY();
-		int pivotX = this.pivotElement.getX();
+		final int column = this.pivotElement.getY();
+		final int pivotX = this.pivotElement.getX();
 		// It's an even matrix and it must have a length of at least
 		// 1x1, so this is safe to do.
 		int rowCount = this.cells[0].length;
@@ -81,6 +82,54 @@ public class SimplexPivotStep {
 			
 			this.cells[column][i] = 0;
 		}
+	}
+	
+	/**
+	 * I couldn't find an equivalent in English for this term, so this
+	 * is a direct translation of the "Kreisregel". It is applied all elements
+	 * of the tableau except for those in the pivot column or row. 
+	 * 
+	 * The complexity here is x * y where x and y are the dimensions of the
+	 * given simplex tableau.
+	 */
+	private void runCircleRule() {
+		final int columnCount = this.cells.length;
+		// Row count is the size of the array's second dimension.
+		final int rowCount = this.cells[0].length;
+		// Using x and y for column and row here, starting - as always -
+		// in the upper, left-hand edge (0, 0).
+		for (int x = 0; x < columnCount; x += 1) {
+			for (int y = 0; y < rowCount; y += 1) {
+				if (x != this.pivotElement.getX() &&
+						y != this.pivotElement.getY()) {
+					// Don't apply the circle rule step on cells that
+					// are calculated by downstream steps.
+					this.applyCircleRuleForCell(x, y);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Apply the circle rule to a specific element in the matrix. This
+	 * is a low-level interface and will not work without proper previous
+	 * checks (like x, y being not of pivot row or column).
+	 * 
+	 * a_{jp}^{\text{new}} = a_{jp} - \frac{a_{jk} \cdot aj_{ip}}{a_{ik}}
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	private void applyCircleRuleForCell(int x, int y) {
+		// Extra variables are defined for reasons of clarity and
+		// comprehensibility.
+		final float old = this.cells[x][y];
+		final int pivotX = this.pivotElement.getX();
+		final int pivotY = this.pivotElement.getY();
+		this.cells[x][y] = old - (
+				(this.cells[pivotX][y] * this.cells[x][pivotY]) / 
+				this.pivotValue
+		);
 	}
 	
 	/**

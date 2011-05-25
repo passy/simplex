@@ -192,7 +192,7 @@ public class SimplexTableauTestCase {
 		
 		// Not a good unit test. This is not the test's subject, but we could
 		// count this as an integration test, I guess.
-		PivotElement pElement = new PivotElement(tabl.getPivotColumn(),
+		final PivotElement pElement = new PivotElement(tabl.getPivotColumn(),
 				tabl.getPivotRow());
 		SimplexPivotStep step = new SimplexPivotStep(cells, pElement);
 		
@@ -209,6 +209,7 @@ public class SimplexTableauTestCase {
 		Assert.assertEquals(newCells[0][3], 0, 0);
 		
 		// Now check the results of the circle rule.
+		Assert.assertEquals(12, newCells[6][2], 0);
 		
 	}
 }
