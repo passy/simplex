@@ -215,10 +215,14 @@ public class SimplexTableauTestCase {
 	@Test
 	public void completeTableauIteratorRun() {
 		SimplexTableau tabl = this.getSimplexTableau();
+		System.out.println(tabl.toString());
 		
 		int i = 0;
+		SimplexTableau lastTabl = null;
 		for(SimplexTableau newTabl : tabl) {
 			i += 1;
+			lastTabl = newTabl;
+			System.out.println(newTabl.toString());
 			
 			if (i > 3) {
 				Assert.fail("Looks life we have an endless loop here, chief.");

@@ -78,10 +78,6 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		return cells;
 	}
 
-	protected int getColumnCount() {
-		return columnCount;
-	}
-	
 	/**
 	 * Get the column with the highest negative coefficient in the target
 	 * function. If there is no negative coefficient, -1 is returned and the
@@ -168,6 +164,13 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		}
 		
 		return pivotRow;
+	}
+	
+	public PivotElement getPivotElement() throws SimplexPivotException {
+		int pivotX = this.getPivotColumn();
+		int pivotY = this.getPivotRow(pivotX);
+		
+		return new PivotElement(pivotX, pivotY);
 	}
 	
 	protected int getRowCount() {
