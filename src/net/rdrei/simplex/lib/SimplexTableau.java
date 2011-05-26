@@ -247,6 +247,8 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		SimplexTableau tableau = new SimplexTableau(this.restrictionCount,
 				this.problemVariableCount);
 		
+		// Those need to be adjusted in an additional step.
+		tableau.variables = this.variables;
 		tableau.cells = cells;
 		return tableau;
 	}

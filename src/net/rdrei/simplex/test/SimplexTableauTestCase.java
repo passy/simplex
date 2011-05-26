@@ -231,6 +231,10 @@ public class SimplexTableauTestCase {
 		}
 		
 		// There are three runs necessary to get the optimal solution.
-		Assert.assertEquals(3, i);
+		Assert.assertEquals(2, i);
+		
+		HashMap<String, Float> result = lastTabl.getBaseResult();
+		Assert.assertArrayEquals(new String[] { "x1", "s2", "x2" },
+				result.keySet().toArray());
 	}
 }
