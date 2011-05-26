@@ -52,6 +52,8 @@ public class SimplexTableauIterator implements Iterator<SimplexTableau> {
 		// Create the new tableau and make it the current for this iterator.
 		SimplexTableau newTableau = 
 			this.tableau.createNewInstanceFromCells(newCells);
+		this.tableau = newTableau;
+		
 		return newTableau;
 	}
 

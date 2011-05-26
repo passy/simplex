@@ -219,6 +219,11 @@ public class SimplexTableauTestCase {
 		int i = 0;
 		for(SimplexTableau newTabl : tabl) {
 			i += 1;
+			
+			if (i > 3) {
+				Assert.fail("Looks life we have an endless loop here, chief.");
+				break;
+			}
 		}
 		
 		// There are three runs necessary to get the optimal solution.
