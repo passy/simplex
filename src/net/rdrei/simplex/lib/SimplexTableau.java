@@ -87,8 +87,9 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	 * function. If there is no negative coefficient, -1 is returned and the
 	 * tableau is optimal.
 	 * @return positive index (0-based) or -1 if tableau is optimal.
+	 * @throws SimplexPivotException 
 	 */
-	public int getPivotColumn() {
+	public int getPivotColumn() throws SimplexPivotException {
 		int min = -1;
 		int row = this.rowCount - 1;
 		// The relevant coefficients include the base variables and not-base
@@ -102,6 +103,12 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 					min = i;					
 				}
 			}
+		}
+		
+		if (min == -1) {
+			throw new SimplexPivotException("There is no negative element " +
+					"within the target function's coefficient. The tableau" +
+					"is optimal.");
 		}
 		
 		return min;
@@ -171,7 +178,12 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	 * Shortcut to check for the optimum criteria.
 	 */
 	public boolean isOptimal() {
-		return this.getPivotColumn() == -1;
+		try {
+			this.getPivotColumn();
+		} catch (SimplexPivotException e) {
+			return true;
+		}
+		return false;
 	}
 	
 	protected void orderVariables() {
