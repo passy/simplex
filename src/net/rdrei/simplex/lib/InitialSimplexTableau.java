@@ -93,9 +93,11 @@ public class InitialSimplexTableau extends SimplexTableau {
 	 * Fill the base variables array with slag variables.
 	 */
 	private void initializeBaseVariables(SimplexProblem problem) {
+		// Begin with the base variables.
 		for (int i = 0; i < this.restrictionCount; i += 1) {
 			this.variables[i] = new SimplexVariable(i, i, true);
 		}
+		// Add non-base variables.
 		// The index (j) here starts from 0, the position (i), however,
 		// must continue the global index.
 		for (int i = this.restrictionCount, j = 0;

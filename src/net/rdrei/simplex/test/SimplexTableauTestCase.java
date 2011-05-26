@@ -18,7 +18,7 @@ import net.rdrei.simplex.lib.SimplexRestriction;
 import net.rdrei.simplex.lib.SimplexRestrictionSet;
 import net.rdrei.simplex.lib.SimplexTableau;
 
-public class SimplexTableauTestCase {
+public class SimplexTableauTestCase extends TestCase {
 	/**
 	 * Mock for a simplex problem.
 	 */
@@ -111,7 +111,7 @@ public class SimplexTableauTestCase {
 	}
 	
 	@Test
-	public void getTargetFunctionCoefficients() {
+	public void testGetTargetFunctionCoefficients() {
 		InitialSimplexTableauMock tabl = this.getSimplexTableau();
 		int[] results = tabl._getTargetFunctionCoefficients();
 		int[] expecteds = new int[] {
@@ -121,7 +121,7 @@ public class SimplexTableauTestCase {
 	}
 	
 	@Test
-	public void getPivotColumn() throws SimplexPivotException {
+	public void testGetPivotColumn() throws SimplexPivotException {
 		SimplexTableau tabl = this.getSimplexTableau();
 		
 		int pivotColumn = tabl.getPivotColumn();
@@ -129,7 +129,7 @@ public class SimplexTableauTestCase {
 	}
 	
 	@Test
-	public void isOptimal() {
+	public void testIsOptimal() {
 		SimplexTableau tabl = this.getSimplexTableau();
 		
 		Assert.assertFalse(tabl.isOptimal());
@@ -139,7 +139,7 @@ public class SimplexTableauTestCase {
 	 * Receive and validate a base result from the initial tableau.
 	 */
 	@Test
-	public void getBaseResult() {
+	public void testGetBaseResult() {
 		SimplexTableau tabl = this.getSimplexTableau();
 		HashMap<String, Float> results = tabl.getBaseResult();
 		
@@ -156,7 +156,7 @@ public class SimplexTableauTestCase {
 	}
 	
 	@Test
-	public void getPivotRow() {
+	public void testGetPivotRow() {
 		SimplexTableau tabl = this.getSimplexTableau();
 		int row;
 		try {
@@ -169,7 +169,7 @@ public class SimplexTableauTestCase {
 	}
 	
 	@Test
-	public void pivotStepMakesPivotElementOne() {
+	public void testPivotStepMakesPivotElementOne() {
 		// XXX: This forged table might fail after the step is completely
 		// implemented.
 		float[][] cells = new float[2][2];
@@ -213,16 +213,14 @@ public class SimplexTableauTestCase {
 	}
 	
 	@Test
-	public void completeTableauIteratorRun() {
+	public void testCompleteTableauIteratorRun() {
 		SimplexTableau tabl = this.getSimplexTableau();
-		System.out.println(tabl.toString());
 		
 		int i = 0;
 		SimplexTableau lastTabl = null;
 		for(SimplexTableau newTabl : tabl) {
 			i += 1;
 			lastTabl = newTabl;
-			System.out.println(newTabl.toString());
 			
 			if (i > 3) {
 				Assert.fail("Looks life we have an endless loop here, chief.");
@@ -233,8 +231,20 @@ public class SimplexTableauTestCase {
 		// There are three runs necessary to get the optimal solution.
 		Assert.assertEquals(2, i);
 		
-		HashMap<String, Float> result = lastTabl.getBaseResult();
-		Assert.assertArrayEquals(new String[] { "x1", "s2", "x2" },
-				result.keySet().toArray());
+		HashMap<String, Float> actualResult = lastTabl.getBaseResult();
+		HashMap<String, Float> expectedResult = new HashMap<String, Float>();
+		
+		expectedResult.put("x1", 10f);
+		expectedResult.put("x2", 3f);
+		expectedResult.put("s1", 0f);
+		expectedResult.put("s2", 3f);
+		expectedResult.put("s3", 0f);
+		expectedResult.put("Z", 360f);
+		
+		Set<String> keys = expectedResult.keySet();
+		for (String key : keys) {
+			Assert.assertEquals(expectedResult.get(key),
+					actualResult.get(key), 0);
+		}
 	}
 }

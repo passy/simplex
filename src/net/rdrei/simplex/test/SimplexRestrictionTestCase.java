@@ -8,10 +8,10 @@ import net.rdrei.simplex.lib.SimplexRestrictionSet;
 import org.junit.Test;
 
 
-public class SimplexRestrictionTestCase {
+public class SimplexRestrictionTestCase extends TestCase {
 	
 	@Test
-	public void simplexEquationAddsSlagVarsFirst() {
+	public void testSimplexEquationAddsSlagVarsFirst() {
 		// 1. -2x1 + 3x2 ≤ 5
 		SimplexRestriction restrict1 = new SimplexRestriction(
 			new int[] {-2, 3}, 5
@@ -26,7 +26,7 @@ public class SimplexRestrictionTestCase {
 	}
 	
 	@Test
-	public void simplexEquationAddSlagVarsSecond() {
+	public void testSimplexEquationAddSlagVarsSecond() {
 		// 2. x2 ≤ 1
 		SimplexRestriction restrict1 = new SimplexRestriction(
 			new int[] {0, 1}, 1
@@ -41,7 +41,7 @@ public class SimplexRestrictionTestCase {
 	}
 
 	@Test
-	public void simplexEquationAddSlagVarsThirdOfThree() {
+	public void testSimplexEquationAddSlagVarsThirdOfThree() {
 		// 2. 2x1 + x2 ≤ 5
 		SimplexRestriction restrict = new SimplexRestriction(
 			new int[] {2, 1}, 5
@@ -57,7 +57,7 @@ public class SimplexRestrictionTestCase {
 	}
 	
 	@Test
-	public void enumeratedSimplexRestriction() {
+	public void testEnumeratedSimplexRestriction() {
 		SimplexRestriction restrict = new SimplexRestriction(
 			new int[] {2, 1}, 5
 		);
@@ -76,7 +76,7 @@ public class SimplexRestrictionTestCase {
 	}
 	
 	@Test
-	public void simplexRestrictionSetIterator() {
+	public void testSimplexRestrictionSetIterator() {
 		SimplexRestriction restrict1 = new SimplexRestriction(
 			new int[] {2, 1}, 5
 		);
@@ -109,7 +109,7 @@ public class SimplexRestrictionTestCase {
 	 * Add two restrictions with different base variable count.
 	 */
 	@Test
-	public void simplexRestrictionSetUnmatch() {
+	public void testSimplexRestrictionSetUnmatch() {
 		boolean excepted = false;
 		
 		SimplexRestriction rest1 = new SimplexRestriction(new int[]{1, 0, 1},

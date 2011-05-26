@@ -23,15 +23,12 @@ public class SimplexVariable implements Comparable<SimplexVariable> {
 	public SimplexVariable(int index, int position, boolean isSlag) {
 		super();
 		this.setIndex(index);
+		this.setPosition(position);
 		this.setSlag(isSlag);
 	}
 	@Override
 	public int compareTo(SimplexVariable o) {
 		return this.getPosition() - o.getPosition();
-	}
-	
-	public int getIndex() {
-		return index;
 	}
 
 	public int getPosition() {

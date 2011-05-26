@@ -3,6 +3,7 @@ package net.rdrei.simplex.lib;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 public class SimplexTableau implements Iterable<SimplexTableau> {
 	/**
@@ -19,6 +20,10 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	 * Stores the variables in the base of the current tableau.
 	 */
 	protected SimplexVariable[] variables;
+	
+	private static Logger LOGGER = Logger.getLogger(
+			"net.rdrei.simplex.lib.SimplexTableau");
+	
 	protected SimplexTableau(int restrictionCount, int problemVariableCount) {
 		super();
 		
@@ -195,6 +200,9 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		Arrays.sort(this.variables);
 	}
 	
+	/**
+	 * Create a textual representation of the current tableau.
+	 */
 	public String toString() {
 		StringBuilder result = new StringBuilder();
 		int pivotX = -1;
@@ -239,7 +247,10 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	
 	/**
 	 * Creates a new tableau with the same internal state except
-	 * for the cells
+	 * for the cells.
+	 * 
+	 * Marked as internal to allow testing, but don't expose the API.
+	 * 
 	 * @param cells New matrix that must match the previous matrix'
 	 * dimensions.
 	 */
@@ -248,9 +259,68 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 				this.problemVariableCount);
 		
 		// Those need to be adjusted in an additional step.
+		// TODO: Actually copy those and not re-reference them.
 		tableau.variables = this.variables;
 		tableau.cells = cells;
 		return tableau;
+	}
+	
+	/**
+	 * Move a variable from the non-base into the base. If the source is a
+	 * slag variable or the target is not a slag variable, an exception is
+	 * raised.
+	 * 
+	 * Internal declaration because of use in SimplexTableauIterator.
+	 * 
+	 * @param nonBaseIndex 0-based index of the source variable (column)
+	 * @param baseIndex 0-based index of the target variable (row)
+	 * @throws SimplexPivotException
+	 */
+	void swapVariable(int nonBaseIndex, int baseIndex)
+	throws SimplexPivotException {
+		
+		LOGGER.info(String.format("Swapping variable non-base var %d and " +
+				"base variable %d.",
+				nonBaseIndex, baseIndex));
+		
+		if (nonBaseIndex < 0 || nonBaseIndex > (
+				this.problemVariableCount + this.restrictionCount)) {
+			throw new SimplexPivotException(
+					String.format("Index %d does not refert to a valid " +
+							"non-base variable.", nonBaseIndex));
+		}
+		
+		if (baseIndex < 0 || baseIndex > this.restrictionCount) {
+			throw new SimplexPivotException(String.format("Index %d does " +
+					"not refert to a valid base variable.", baseIndex));
+		}
+		
+		// We access the indeces, so it must be ordered.
+		this.orderVariables();
+		
+		SimplexVariable targetVariable = this.variables[baseIndex];
+		if (!targetVariable.isSlag()) {
+			throw new SimplexPivotException(String.format("Variable %s " +
+					"is not a slag variable! Optimization failed.",
+					targetVariable.toString()));
+		}
+		
+		SimplexVariable sourceVariable =
+			this.variables[this.problemVariableCount + nonBaseIndex + 1];
+		
+		if (sourceVariable.isSlag()) {
+			throw new SimplexPivotException(String.format("Tried to move " +
+					"slag variable %s into to the base. Bad idea!",
+					sourceVariable.toString()));
+		}
+		
+		// Swap positions.
+		int sourcePosition = sourceVariable.getPosition();
+		sourceVariable.setPosition(targetVariable.getPosition());
+		targetVariable.setPosition(sourcePosition);
+		
+		LOGGER.info(String.format("Swapped variable %s and %s.",
+				sourceVariable, targetVariable));
 	}
 
 	@Override

@@ -45,6 +45,14 @@ public class SimplexTableauIterator implements Iterator<SimplexTableau> {
 		// Create the new tableau and make it the current for this iterator.
 		SimplexTableau newTableau = 
 			this.tableau.createNewInstanceFromCells(newCells);
+		
+		// Swap variables according to pivot element.
+		try {
+			newTableau.swapVariable(pivotElement.getX(), pivotElement.getY());
+		} catch(SimplexPivotException e) {
+			e.printStackTrace();
+			throw new NoSuchElementException("Tableau can't be optimized!");
+		}
 		this.tableau = newTableau;
 		
 		return newTableau;
