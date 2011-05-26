@@ -197,6 +197,17 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	
 	public String toString() {
 		StringBuilder result = new StringBuilder();
+		int pivotX = -1;
+		int pivotY = -1;
+		
+		try {
+			PivotElement element = this.getPivotElement();
+			pivotX = element.getX();
+			pivotY = element.getY();
+		} catch(SimplexPivotException e) {
+			// pivot coordinates stay invalid.
+		}
+		
 		// Some separation line
 		for (int i = 0; i < this.columnCount * 8; i += 1) {
 			result.append('-');
@@ -205,7 +216,14 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		
 		for (int i = 0; i < this.rowCount; i += 1) {
 			for (int j = 0; j < this.columnCount; j += 1) {
-				result.append(this.cells[j][i]);
+				float value = this.cells[j][i];
+				if (j == pivotX && i == pivotY) {
+					result.append('*');
+					result.append(value);
+					result.append('*');
+				} else {
+					result.append(value);
+				}
 				result.append('\t');
 			}
 			result.append('\n');
