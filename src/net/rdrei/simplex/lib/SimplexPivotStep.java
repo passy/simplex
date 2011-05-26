@@ -60,7 +60,6 @@ public class SimplexPivotStep {
 		
 		for (int i = 0; i < columnCount; i += 1) {
 			// We ignore the target column here, it's result is 0, anyway.
-			System.out.printf("Dividing (%d/%d/%f) through %f.\n", i, row, this.cells[i][row], this.pivotValue);
 			this.cells[i][row] /= this.pivotValue;
 		}
 	}
@@ -69,14 +68,14 @@ public class SimplexPivotStep {
 	 * Create a unit vector in the pivot column.
 	 */
 	private void createUnitVector() {
-		final int column = this.pivotElement.getY();
-		final int pivotX = this.pivotElement.getX();
+		final int column = this.pivotElement.getX();
+		final int pivotY = this.pivotElement.getY();
 		// It's an even matrix and it must have a length of at least
 		// 1x1, so this is safe to do.
 		int rowCount = this.cells[0].length;
 		
 		for (int i = 0; i < rowCount; i += 1) {
-			if (i == pivotX) {
+			if (i == pivotY) {
 				// Is already 1, no need to re-set.
 				continue;
 			}
