@@ -55,11 +55,12 @@ public class SimplexPivotStep {
 	 * Divides the pivot row through the pivot element.
 	 */
 	private void divideRow() {
-		int row = this.pivotElement.getX();
+		int row = this.pivotElement.getY();
 		int columnCount = this.cells.length;
 		
 		for (int i = 0; i < columnCount; i += 1) {
 			// We ignore the target column here, it's result is 0, anyway.
+			System.out.printf("Dividing (%d/%d/%f) through %f.\n", i, row, this.cells[i][row], this.pivotValue);
 			this.cells[i][row] /= this.pivotValue;
 		}
 	}
