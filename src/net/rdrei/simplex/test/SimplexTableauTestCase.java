@@ -121,7 +121,7 @@ public class SimplexTableauTestCase {
 	}
 	
 	@Test
-	public void getPivotColumn() {
+	public void getPivotColumn() throws SimplexPivotException {
 		SimplexTableau tabl = this.getSimplexTableau();
 		
 		int pivotColumn = tabl.getPivotColumn();
@@ -210,6 +210,18 @@ public class SimplexTableauTestCase {
 		
 		// Now check the results of the circle rule.
 		Assert.assertEquals(12, newCells[6][2], 0);
+	}
+	
+	@Test
+	public void completeTableauIteratorRun() {
+		SimplexTableau tabl = this.getSimplexTableau();
 		
+		int i = 0;
+		for(SimplexTableau newTabl : tabl) {
+			i += 1;
+		}
+		
+		// There are three runs necessary to get the optimal solution.
+		Assert.assertEquals(3, i);
 	}
 }

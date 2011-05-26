@@ -215,6 +215,20 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		
 		return result.toString();
 	}
+	
+	/**
+	 * Creates a new tableau with the same internal state except
+	 * for the cells
+	 * @param cells New matrix that must match the previous matrix'
+	 * dimensions.
+	 */
+	SimplexTableau createNewInstanceFromCells(float[][] cells) {
+		SimplexTableau tableau = new SimplexTableau(this.restrictionCount,
+				this.problemVariableCount);
+		
+		tableau.cells = cells;
+		return tableau;
+	}
 
 	@Override
 	public Iterator<SimplexTableau> iterator() {

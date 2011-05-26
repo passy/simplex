@@ -5,38 +5,15 @@ import java.util.NoSuchElementException;
 
 public class SimplexTableauIterator implements Iterator<SimplexTableau> {
 	
-	/** Internal class that allows creation of a new tableau based on the
-	 * current one.
-	 */
-	class ReplaceableSimplexTableau extends SimplexTableau {
-		protected ReplaceableSimplexTableau(int restrictionCount,
-				int problemVariableCount) {
-			super(restrictionCount, problemVariableCount);
-		}
-		
-		/** Creates a new tableau with the same internal state except
-		 * for the cells
-		 * @param cells New matrix that must match the previous matrix'
-		 * dimensions.
-		 */
-		SimplexTableau createNewInstanceFromCells(float[][] cells) {
-			SimplexTableau tableau = new SimplexTableau(this.restrictionCount,
-					this.problemVariableCount);
-			
-			tableau.cells = cells;
-			return tableau;
-		}
-	}
-	
 	/**
 	 * Reference to the previous simplex tableau.
 	 */
-	private ReplaceableSimplexTableau tableau;
+	private SimplexTableau tableau;
 
 	public SimplexTableauIterator(SimplexTableau tableau) {
 		super();
 		// Up-cast to internal class.
-		this.tableau = (ReplaceableSimplexTableau) tableau;
+		this.tableau = (SimplexTableau) tableau;
 	}
 
 	@Override
