@@ -2,8 +2,9 @@ package net.rdrei.simplex.lib;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 
-public class SimplexTableau {
+public class SimplexTableau implements Iterable<SimplexTableau> {
 	/**
 	 * Stores all the field values in the complete tableau, except for the 
 	 * q_i value as it's not really part of the table.
@@ -201,5 +202,10 @@ public class SimplexTableau {
 		}
 		
 		return result.toString();
+	}
+
+	@Override
+	public Iterator<SimplexTableau> iterator() {
+		return new SimplexTableauIterator(this);
 	}
 }
