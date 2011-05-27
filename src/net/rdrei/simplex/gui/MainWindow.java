@@ -19,7 +19,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -31,6 +30,7 @@ public class MainWindow {
 	private JFrame mainFrame;
 	private SimplexProblem simplexProblem;
 	private JButton btnContinue;
+	private SimplexStepPanel activePanel;
 	
 	private final static Logger LOGGER = Logger.getLogger(
 			MainWindow.class.getName());
@@ -63,14 +63,13 @@ public class MainWindow {
 	
 	class NewDialogActionListener implements ActionListener {
 
-		@Override
 		/**
 		 * Open the New Problem Dialog.
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Show the NewProblemDialog
-			NewProblemDialog dialog = new NewProblemDialog(
-					mainFrame, true);
+			NewProblemDialog dialog = new NewProblemDialog(mainFrame, true);
 			dialog.setModalityType(ModalityType.APPLICATION_MODAL);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.addWindowListener(new NewDialogWindowListener());
@@ -109,9 +108,13 @@ public class MainWindow {
 		mainFrame.setVisible(true);
 	}
 	
-	private void setMainPanel(JPanel panel) {
+	private void setMainPanel(SimplexStepPanel panel) {
+		this.activePanel = panel;
+		
 		mainFrame.getContentPane().removeAll();
 		btnContinue = new JButton("Weiter");
+		btnContinue.setEnabled(this.activePanel.hasNextStep());
+		
 		// This needs to be changed depending on which page of the wizard
 		// we're on.
 		btnContinue.addActionListener(new StartSimplexButtonActionListener());

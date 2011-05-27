@@ -3,7 +3,6 @@ package net.rdrei.simplex.gui;
 import java.awt.Font;
 
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
@@ -20,7 +19,7 @@ import com.jgoodies.forms.layout.RowSpec;
  * @author pascal
  *
  */
-public class FormularInputPanel extends JPanel implements SimplexProblem {
+public class FormularInputPanel extends SimplexStepPanel implements SimplexProblem {
 	private static final short defaultNumberOfRestrictions = 2;
 	
 	private static final short defaultNumberOfVariables = 2;
@@ -312,5 +311,17 @@ public class FormularInputPanel extends JPanel implements SimplexProblem {
 		}
 		
 		return restrictions;
+	}
+
+	@Override
+	public boolean hasNextStep() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void nextStep() {
+		// TODO Auto-generated method stub
+		
 	}
 }
