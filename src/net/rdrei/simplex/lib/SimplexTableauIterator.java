@@ -13,7 +13,7 @@ public class SimplexTableauIterator implements Iterator<SimplexTableau> {
 	public SimplexTableauIterator(SimplexTableau tableau) {
 		super();
 		// Up-cast to internal class.
-		this.tableau = (SimplexTableau) tableau;
+		this.tableau = tableau;
 	}
 
 	@Override

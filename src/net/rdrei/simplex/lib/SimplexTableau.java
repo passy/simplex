@@ -205,15 +205,16 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	 */
 	public String toString() {
 		StringBuilder result = new StringBuilder();
-		int pivotX = -1;
-		int pivotY = -1;
+		int pivotX, pivotY;
 		
 		try {
 			PivotElement element = this.getPivotElement();
 			pivotX = element.getX();
 			pivotY = element.getY();
 		} catch(SimplexPivotException e) {
-			// pivot coordinates stay invalid.
+			// Set pivot coordinates to values that can't get triggered.
+			pivotX = -1;
+			pivotY = -1;
 		}
 		
 		// Some separation line
