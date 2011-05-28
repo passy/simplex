@@ -1,7 +1,7 @@
 package net.rdrei.simplex.lib;
 
 public interface SimplexProblem {
-	int[] getBaseVariables();
+	int[] getProblemVariables();
 	
 	SimplexRestrictionSet getRestrictionSet();
 }

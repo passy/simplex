@@ -23,22 +23,22 @@ public class SimplexTableauTestCase extends TestCase {
 	 * Mock for a simplex problem.
 	 */
 	class SimplexProblemMock implements SimplexProblem {
-		private int[] baseVariables;
+		private int[] problemVariables;
 		private SimplexRestrictionSet restrictionSet;
 		public SimplexProblemMock(int[] baseVariables,
 				SimplexRestrictionSet restrictionSet) {
 			super();
-			this.baseVariables = baseVariables;
+			this.problemVariables = baseVariables;
 			this.restrictionSet = restrictionSet;
 		}
-		public int[] getBaseVariables() {
-			return baseVariables;
+		public int[] getProblemVariables() {
+			return problemVariables;
 		}
 		public SimplexRestrictionSet getRestrictionSet() {
 			return restrictionSet;
 		}
 		public void setBaseVariables(int[] baseVariables) {
-			this.baseVariables = baseVariables;
+			this.problemVariables = baseVariables;
 		}
 		public void setRestrictionSet(SimplexRestrictionSet restrictionSet) {
 			this.restrictionSet = restrictionSet;

@@ -8,7 +8,7 @@ public class InitialSimplexTableau extends SimplexTableau {
 	 */
 	public InitialSimplexTableau(SimplexProblem problem) {
 		// Pass on to the next constructor.
-		this(problem.getRestrictionSet(), problem.getBaseVariables());
+		this(problem.getRestrictionSet(), problem.getProblemVariables());
 		this.loadFromProblem(problem);
 		this.initializeBaseVariables(problem);
 	}
@@ -70,7 +70,7 @@ public class InitialSimplexTableau extends SimplexTableau {
 	 * This method returns them in the latter format, like [-30, -20, 1].
 	 */
 	protected int[] getTargetFunctionCoefficients(SimplexProblem problem) {
-		int[] baseVariables = problem.getBaseVariables();
+		int[] baseVariables = problem.getProblemVariables();
 		int restrictionCount = problem.getRestrictionSet().size();
 		int length = baseVariables.length + restrictionCount;
 		int results[] = new int[length + 1];

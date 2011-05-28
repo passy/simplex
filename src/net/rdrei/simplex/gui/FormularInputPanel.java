@@ -6,9 +6,11 @@ import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+import net.rdrei.simplex.lib.InitialSimplexTableau;
 import net.rdrei.simplex.lib.SimplexProblem;
 import net.rdrei.simplex.lib.SimplexRestriction;
 import net.rdrei.simplex.lib.SimplexRestrictionSet;
+import net.rdrei.simplex.lib.SimplexTableau;
 
 import com.jgoodies.forms.factories.FormFactory;
 import com.jgoodies.forms.layout.ColumnSpec;
@@ -25,7 +27,7 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 	private static final short defaultNumberOfVariables = 2;
 	private static final long serialVersionUID = 1L;
 	
-	private JSpinner[] baseVariableSpinners;
+	private JSpinner[] problemVariableSpinners;
 	private int numberOfRestrictions;
 	
 	private int numberOfVariables;
@@ -40,7 +42,7 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 		this.numberOfVariables = numberOfVariables;
 		this.numberOfRestrictions = numberOfRestrictions;
 		
-		this.baseVariableSpinners = new JSpinner[numberOfVariables];
+		this.problemVariableSpinners = new JSpinner[numberOfVariables];
 		this.restrictionVariableSpinners = 
 			new JSpinner[numberOfRestrictions][numberOfVariables + 1];
 		
@@ -51,7 +53,7 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 	/**
 	 * Populates the list of spinners for the target function equation.
 	 */
-	private void buildBaseVariableSpinners() {
+	private void buildProblemVariableSpinners() {
 		// Create one spinner for each coefficient.
 		for (int i = 0; i < this.numberOfVariables; i += 1) {
 			JSpinner spinner = new JSpinner();
@@ -59,7 +61,7 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 			SpinnerNumberModel model = new SpinnerNumberModel(1, null,
 					null, 1);
 			spinner.setModel(model);
-			this.baseVariableSpinners[i] = spinner;
+			this.problemVariableSpinners[i] = spinner;
 		}
 	}
 	
@@ -130,13 +132,13 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 		}
 		
 		// Target function variables
-		buildBaseVariableSpinners();
+		buildProblemVariableSpinners();
 		// Iterates through all created spinners and adds them to the layout
 		// with a label afterwards showing their variable name.
 		{
-			int spinnerCount = this.baseVariableSpinners.length;
+			int spinnerCount = this.problemVariableSpinners.length;
 			for(int i = 0; i < spinnerCount; i += 1) {
-				JSpinner spinner = this.baseVariableSpinners[i];
+				JSpinner spinner = this.problemVariableSpinners[i];
 				// The coordinates require that the above column count
 				// calculations were correct. Otherwise we might run into
 				// a NullPointer condition here.
@@ -255,11 +257,11 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 	}
 
 	@Override
-	public int[] getBaseVariables() {
+	public int[] getProblemVariables() {
 		int[] result = new int[this.numberOfVariables];
 		int i = 0;
 		
-		for (JSpinner spinner : this.baseVariableSpinners) {
+		for (JSpinner spinner : this.problemVariableSpinners) {
 			result[i++] = (Integer) spinner.getValue();
 		}
 		
@@ -296,7 +298,7 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 		int i = 0;
 		
 		for (JSpinner[] spinners : this.restrictionVariableSpinners) {
-			int[] baseVariableCoefficients = 
+			int[] problemVariableCoefficients = 
 				this.getRestrictionCoefficients(i);
 			
 			// The last element is the equation's right-side.
@@ -304,7 +306,7 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 				(Integer) spinners[spinners.length - 1].getValue();
 			
 			SimplexRestriction restriction = new SimplexRestriction(
-					baseVariableCoefficients, restrictionResult);
+					problemVariableCoefficients, restrictionResult);
 			
 			restrictions.add(restriction);
 			i += 1;
@@ -315,13 +317,15 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 
 	@Override
 	public boolean hasNextStep() {
-		// TODO Auto-generated method stub
-		return false;
+		// There always is a next step after this.
+		return true;
 	}
 
 	@Override
-	public void nextStep() {
-		// TODO Auto-generated method stub
+	public SimplexStepPanel nextStep() {
+		// Create the initial tableau based on the current problem.
+		SimplexTableau tableau = new InitialSimplexTableau(this);
 		
+		return TableauViewPanel(tableau);
 	}
 }

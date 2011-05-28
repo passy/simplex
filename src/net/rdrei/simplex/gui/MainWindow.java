@@ -18,12 +18,10 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
 import net.rdrei.simplex.lib.SimplexProblem;
-import net.rdrei.simplex.lib.SimplexRestriction;
 
 public class MainWindow {
 
@@ -84,18 +82,13 @@ public class MainWindow {
 		 * Pass data to the backend and display it in the frontend.
 		 */
 		public void actionPerformed(ActionEvent e) {
-			String variables = "Variables: ";
-			for (int var : simplexProblem.getBaseVariables()) {
-				variables += "" + var + ", ";
-			}
+			SimplexStepPanel panel = MainWindow.this.activePanel;
 			
-			String restrictions = "Restrictions: ";
-			for (SimplexRestriction restriction :
-				simplexProblem.getRestrictionSet().getList()) {
-				
-				restrictions += restriction.toString() + ", ";
+			// Redundant as the button is disabled otherwise, but just to
+			// be safe.
+			if (panel.hasNextStep()) {
+				MainWindow.this.setMainPanel(panel.nextStep());
 			}
-			JOptionPane.showMessageDialog(mainFrame, variables + " " + restrictions);
 		}
 	};
 

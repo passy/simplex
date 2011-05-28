@@ -36,5 +36,5 @@ public abstract class SimplexStepPanel extends JPanel {
 	 * @return
 	 */
 	public abstract boolean hasNextStep();
-	public abstract void nextStep();
+	public abstract SimplexStepPanel nextStep();
 }
