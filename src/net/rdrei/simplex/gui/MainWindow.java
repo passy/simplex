@@ -21,12 +21,11 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import net.rdrei.simplex.lib.SimplexProblem;
+import junit.framework.Assert;
 
 public class MainWindow {
 
 	private JFrame mainFrame;
-	private SimplexProblem simplexProblem;
 	private JButton btnContinue;
 	private SimplexStepPanel activePanel;
 	
@@ -52,7 +51,6 @@ public class MainWindow {
 					FormularInputPanel panel = new FormularInputPanel(
 							numberOfVariables, numberOfRestrictions
 					);
-					simplexProblem = panel;
 					MainWindow.this.setMainPanel(panel);
 				}
 			}
@@ -87,7 +85,9 @@ public class MainWindow {
 			// Redundant as the button is disabled otherwise, but just to
 			// be safe.
 			if (panel.hasNextStep()) {
-				MainWindow.this.setMainPanel(panel.nextStep());
+				SimplexStepPanel nextPanel = panel.nextStep();
+				Assert.assertNotNull("There is no panel!", nextPanel);
+				MainWindow.this.setMainPanel(nextPanel);
 			}
 		}
 	};
@@ -133,7 +133,6 @@ public class MainWindow {
 	
 	private void loadDefaultPanel() {
 		FormularInputPanel panel = new FormularInputPanel();
-		simplexProblem = panel;
 		setMainPanel(panel);
 	}
 	

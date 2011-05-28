@@ -326,6 +326,6 @@ public class FormularInputPanel extends SimplexStepPanel implements SimplexProbl
 		// Create the initial tableau based on the current problem.
 		SimplexTableau tableau = new InitialSimplexTableau(this);
 		
-		return TableauViewPanel(tableau);
+		return new TableauViewPanel(tableau);
 	}
 }
