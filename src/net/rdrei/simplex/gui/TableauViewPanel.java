@@ -16,6 +16,8 @@ public class TableauViewPanel extends SimplexStepPanel {
 	public TableauViewPanel(SimplexTableau tableau) {
 		table = new JTable();
 		System.out.println(tableau.toString());
+		System.out.println("Base solution: ");
+		System.out.println(tableau.getBaseResult());
 		this.iterator = tableau.iterator();
 		add(table);
 	}
