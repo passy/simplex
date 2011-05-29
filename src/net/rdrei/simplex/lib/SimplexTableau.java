@@ -116,9 +116,33 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	 * Return the cell data in a row-wise manner, so it can be added
 	 * to a JTable. The first column includes the base variables as well as
 	 * a Z identifier.
+	 * 
+	 * The base variables might be wrong, if the variables are not correctly
+	 * ordered. Use orderVariables() to be sure.
 	 */
-	public Float[][] getTableData() {
-		return null;
+	public Object[][] getTableData() {
+		// The rows have one column more for the row identifier.
+		Object[][] result =
+			new Object[this.cells[0].length][this.cells.length + 1];
+		for (int x = 0; x < this.cells.length + 1; x += 1) {
+			// Using using constant ([0]) access here as hint for
+			// the compiler.
+			for (int y = 0; y < this.cells[0].length; y += 1) {
+				if (x == 0 && y != this.cells[0].length - 1) {
+					// If it's any but the last row, use the variable
+					result[y][x] = this.variables[y].toString();
+				} else if (x == 0) {
+					// In that case, it's the target function.
+					result[y][x] = "Z";
+				} else {
+					// Otherwise, reverse the cell index and respect
+					// the additional x coordinate for the label.
+					result[y][x] = this.cells[x - 1][y];
+				}
+			}
+		}
+		
+		return result;
 	}
 	
 	/**

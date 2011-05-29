@@ -259,4 +259,19 @@ public class SimplexTableauTestCase extends TestCase {
 		Assert.assertArrayEquals(expectedhorizontalVariableNames,
 				horizontalVariableNames);
 	}
+	
+	@Test
+	public void testGetTableData() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		
+		Object[][] tableData = tabl.getTableData();
+		Object[][] expectedTableData = new Object[][] {
+			{"s1", 1f, 0f, 1f, 0f, 0f, 0f, 10f},
+			{"s2", 0f, 1f, 0f, 1f, 0f, 0f, 6f},
+			{"s3", 2f, 4f, 0f, 0f, 1f, 0f, 32f},
+			{"Z", -30f, -20f, 0f, 0f, 0f, 1f, 0f}
+		};
+		
+		Assert.assertArrayEquals(expectedTableData, tableData);
+	}
 }
