@@ -368,8 +368,10 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 					targetVariable.toString()));
 		}
 		
+		// The source variable is outside of the base so the restriction count
+		// is the offset within the variables array.
 		SimplexVariable sourceVariable =
-			this.variables[this.problemVariableCount + nonBaseIndex + 1];
+			this.variables[this.restrictionCount + nonBaseIndex];
 		
 		if (sourceVariable.isSlag()) {
 			throw new SimplexPivotException(String.format("Tried to move " +

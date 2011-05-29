@@ -274,4 +274,21 @@ public class SimplexTableauTestCase extends TestCase {
 		
 		Assert.assertArrayEquals(expectedTableData, tableData);
 	}
+	
+	@Test
+	public void testVariableSwapRegression() {
+		SimplexRestriction rest1 = new SimplexRestriction(new int[]{1}, 3);
+		
+		int[] baseVariables = new int[] {1};
+		
+		SimplexRestrictionSet restrictionSet = new SimplexRestrictionSet();
+		restrictionSet.add(rest1);
+		
+		SimplexProblem problem = new SimplexProblemMock(baseVariables,
+				restrictionSet);
+		SimplexTableau tableau = new InitialSimplexTableauMock(problem);
+		
+		SimplexTableau firstTableau = tableau.iterator().next();
+		Assert.assertTrue(firstTableau.isOptimal());
+	}
 }
