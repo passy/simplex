@@ -138,14 +138,14 @@ public class SimplexPivotStep {
 	 * @return
 	 */
 	private static float[][] copy2d(float[][] nums) {
-        float[][] copy = new float[nums.length][];
+		float[][] copy = new float[nums.length][];
 
-        for (int i = 0; i < copy.length; i++) {
-                float[] member = new float[nums[i].length];
-                System.arraycopy(nums[i], 0, member, 0, nums[i].length);
-                copy[i] = member;
-        }
+		for (int i = 0; i < copy.length; i++) {
+			float[] member = new float[nums[i].length];
+			System.arraycopy(nums[i], 0, member, 0, nums[i].length);
+			copy[i] = member;
+		}
 
-        return copy;
+		return copy;
 	}	
 }
