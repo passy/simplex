@@ -18,19 +18,16 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import net.rdrei.simplex.lib.SimplexProblem;
-import net.rdrei.simplex.lib.SimplexRestriction;
+import junit.framework.Assert;
 
 public class MainWindow {
 
 	private JFrame mainFrame;
-	private SimplexProblem simplexProblem;
 	private JButton btnContinue;
+	private SimplexStepPanel activePanel;
 	
 	private final static Logger LOGGER = Logger.getLogger(
 			MainWindow.class.getName());
@@ -54,7 +51,6 @@ public class MainWindow {
 					FormularInputPanel panel = new FormularInputPanel(
 							numberOfVariables, numberOfRestrictions
 					);
-					simplexProblem = panel;
 					MainWindow.this.setMainPanel(panel);
 				}
 			}
@@ -63,14 +59,13 @@ public class MainWindow {
 	
 	class NewDialogActionListener implements ActionListener {
 
-		@Override
 		/**
 		 * Open the New Problem Dialog.
 		 */
+		@Override
 		public void actionPerformed(ActionEvent e) {
 			// Show the NewProblemDialog
-			NewProblemDialog dialog = new NewProblemDialog(
-					mainFrame, true);
+			NewProblemDialog dialog = new NewProblemDialog(mainFrame, true);
 			dialog.setModalityType(ModalityType.APPLICATION_MODAL);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.addWindowListener(new NewDialogWindowListener());
@@ -85,18 +80,15 @@ public class MainWindow {
 		 * Pass data to the backend and display it in the frontend.
 		 */
 		public void actionPerformed(ActionEvent e) {
-			String variables = "Variables: ";
-			for (int var : simplexProblem.getBaseVariables()) {
-				variables += "" + var + ", ";
-			}
+			SimplexStepPanel panel = MainWindow.this.activePanel;
 			
-			String restrictions = "Restrictions: ";
-			for (SimplexRestriction restriction :
-				simplexProblem.getRestrictionSet().getList()) {
-				
-				restrictions += restriction.toString() + ", ";
+			// Redundant as the button is disabled otherwise, but just to
+			// be safe.
+			if (panel.hasNextStep()) {
+				SimplexStepPanel nextPanel = panel.nextStep();
+				Assert.assertNotNull("There is no panel!", nextPanel);
+				MainWindow.this.setMainPanel(nextPanel);
 			}
-			JOptionPane.showMessageDialog(mainFrame, variables + " " + restrictions);
 		}
 	};
 
@@ -109,9 +101,13 @@ public class MainWindow {
 		mainFrame.setVisible(true);
 	}
 	
-	private void setMainPanel(JPanel panel) {
+	private void setMainPanel(SimplexStepPanel panel) {
+		this.activePanel = panel;
+		
 		mainFrame.getContentPane().removeAll();
 		btnContinue = new JButton("Weiter");
+		btnContinue.setEnabled(this.activePanel.hasNextStep());
+		
 		// This needs to be changed depending on which page of the wizard
 		// we're on.
 		btnContinue.addActionListener(new StartSimplexButtonActionListener());
@@ -137,7 +133,6 @@ public class MainWindow {
 	
 	private void loadDefaultPanel() {
 		FormularInputPanel panel = new FormularInputPanel();
-		simplexProblem = panel;
 		setMainPanel(panel);
 	}
 	

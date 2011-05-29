@@ -82,7 +82,69 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	public float[][] getCells() {
 		return cells;
 	}
-
+	
+	/**
+	 * Get an array of Strings to display in a table. Includes
+	 * an empty first cell!
+	 * @return
+	 */
+	public String[] getHorizontalVariableNames() {
+		int i = 0;
+		String[] result = new String[this.cells.length + 1];
+		
+		// Empty String to have a neutral column.
+		result[i++] = "";
+		
+		// Fill in the problem variables.
+		for (int j = 0; j < this.problemVariableCount; j += 1, i += 1) {
+			result[i] = "x" + (j + 1);
+		}
+		
+		// Now the slag variables
+		for (int j = 0; j < this.restrictionCount; j += 1, i += 1) {
+			result[i] = "s" + (j + 1);
+		}
+		
+		// The rest is static
+		result[i++] = "Z";
+		result[i++] = "b";
+		
+		return result;
+	}
+	
+	/**
+	 * Return the cell data in a row-wise manner, so it can be added
+	 * to a JTable. The first column includes the base variables as well as
+	 * a Z identifier.
+	 * 
+	 * The base variables might be wrong, if the variables are not correctly
+	 * ordered. Use orderVariables() to be sure.
+	 */
+	public Object[][] getTableData() {
+		// The rows have one column more for the row identifier.
+		Object[][] result =
+			new Object[this.cells[0].length][this.cells.length + 1];
+		for (int x = 0; x < this.cells.length + 1; x += 1) {
+			// Using using constant ([0]) access here as hint for
+			// the compiler.
+			for (int y = 0; y < this.cells[0].length; y += 1) {
+				if (x == 0 && y != this.cells[0].length - 1) {
+					// If it's any but the last row, use the variable
+					result[y][x] = this.variables[y].toString();
+				} else if (x == 0) {
+					// In that case, it's the target function.
+					result[y][x] = "Z";
+				} else {
+					// Otherwise, reverse the cell index and respect
+					// the additional x coordinate for the label.
+					result[y][x] = this.cells[x - 1][y];
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * Get the column with the highest negative coefficient in the target
 	 * function. If there is no negative coefficient, -1 is returned and the

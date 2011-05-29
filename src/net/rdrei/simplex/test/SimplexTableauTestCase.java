@@ -23,22 +23,22 @@ public class SimplexTableauTestCase extends TestCase {
 	 * Mock for a simplex problem.
 	 */
 	class SimplexProblemMock implements SimplexProblem {
-		private int[] baseVariables;
+		private int[] problemVariables;
 		private SimplexRestrictionSet restrictionSet;
 		public SimplexProblemMock(int[] baseVariables,
 				SimplexRestrictionSet restrictionSet) {
 			super();
-			this.baseVariables = baseVariables;
+			this.problemVariables = baseVariables;
 			this.restrictionSet = restrictionSet;
 		}
-		public int[] getBaseVariables() {
-			return baseVariables;
+		public int[] getProblemVariables() {
+			return problemVariables;
 		}
 		public SimplexRestrictionSet getRestrictionSet() {
 			return restrictionSet;
 		}
 		public void setBaseVariables(int[] baseVariables) {
-			this.baseVariables = baseVariables;
+			this.problemVariables = baseVariables;
 		}
 		public void setRestrictionSet(SimplexRestrictionSet restrictionSet) {
 			this.restrictionSet = restrictionSet;
@@ -246,5 +246,32 @@ public class SimplexTableauTestCase extends TestCase {
 			Assert.assertEquals(expectedResult.get(key),
 					actualResult.get(key), 0);
 		}
+	}
+	
+	@Test
+	public void testGetHorizontalVariableNames() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		
+		String[] horizontalVariableNames = tabl.getHorizontalVariableNames();
+		String[] expectedhorizontalVariableNames = new String[] {
+			"", "x1", "x2", "s1", "s2", "s3", "Z", "b"
+		};
+		Assert.assertArrayEquals(expectedhorizontalVariableNames,
+				horizontalVariableNames);
+	}
+	
+	@Test
+	public void testGetTableData() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		
+		Object[][] tableData = tabl.getTableData();
+		Object[][] expectedTableData = new Object[][] {
+			{"s1", 1f, 0f, 1f, 0f, 0f, 0f, 10f},
+			{"s2", 0f, 1f, 0f, 1f, 0f, 0f, 6f},
+			{"s3", 2f, 4f, 0f, 0f, 1f, 0f, 32f},
+			{"Z", -30f, -20f, 0f, 0f, 0f, 1f, 0f}
+		};
+		
+		Assert.assertArrayEquals(expectedTableData, tableData);
 	}
 }
