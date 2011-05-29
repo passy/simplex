@@ -82,7 +82,45 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	public float[][] getCells() {
 		return cells;
 	}
-
+	
+	/**
+	 * Get an array of Strings to display in a table. Includes
+	 * an empty first cell!
+	 * @return
+	 */
+	public String[] getHorizontalVariableNames() {
+		int i = 0;
+		String[] result = new String[this.cells.length + 1];
+		
+		// Empty String to have a neutral column.
+		result[i++] = "";
+		
+		// Fill in the problem variables.
+		for (int j = 0; j < this.problemVariableCount; j += 1, i += 1) {
+			result[i] = "x" + (j + 1);
+		}
+		
+		// Now the slag variables
+		for (int j = 0; j < this.restrictionCount; j += 1, i += 1) {
+			result[i] = "s" + (j + 1);
+		}
+		
+		// The rest is static
+		result[i++] = "Z";
+		result[i++] = "b";
+		
+		return result;
+	}
+	
+	/**
+	 * Return the cell data in a row-wise manner, so it can be added
+	 * to a JTable. The first column includes the base variables as well as
+	 * a Z identifier.
+	 */
+	public Float[][] getTableData() {
+		return null;
+	}
+	
 	/**
 	 * Get the column with the highest negative coefficient in the target
 	 * function. If there is no negative coefficient, -1 is returned and the

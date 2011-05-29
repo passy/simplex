@@ -13,6 +13,7 @@ import net.miginfocom.swing.MigLayout;
 public class TableauViewPanel extends SimplexStepPanel {
 	private static final long serialVersionUID = -5784588577474570460L;
 	private Iterator<SimplexTableau> iterator;
+	private SimplexTableau tableau;
 	
 	/**
 	 * Counter of the tableau needed for the heading.
@@ -25,19 +26,22 @@ public class TableauViewPanel extends SimplexStepPanel {
 	 */
 	public TableauViewPanel(SimplexTableau tableau) {
 		this.iterator = tableau.iterator();
+		this.tableau = tableau;
 		buildLayout();
 	}
 	
 	public TableauViewPanel(SimplexTableau tableau, int index) {
 		this.index = index;
 		this.iterator = tableau.iterator();
+		this.tableau = tableau;
 		buildLayout();
 	}
 	
 	private void buildLayout() {
-		setLayout(new MigLayout("", "[10px][grow]", "[48px][]"));
+		setLayout(new MigLayout("", "[10px][grow]", "[48px][][]"));
 		this.buildHeading();
 		this.buildTable();
+		this.buildBaseResult();
 	}
 	
 	private String getHeading() {
@@ -54,17 +58,27 @@ public class TableauViewPanel extends SimplexStepPanel {
 		add(label, "cell 1 0,alignx left,aligny center");
 	}
 	
+	/**
+	 * Creates a JTable and adds it via a ScrollPane to the layout.
+	 */
 	private void buildTable() {
-		Object[][] data = {
-				{"s1", 12.5f, 4f},
-				{"s2", 3f, 4f},
-				{"x1", 0, 12f}
-		};
-		JTable table = new JTable(data, new Object[] { "", "x1", "x2" });
+		JTable table = new JTable(this.tableau.getTableData(),
+				this.tableau.getHorizontalVariableNames());
 		JScrollPane scrollPane = new JScrollPane(table);
 		table.setFillsViewportHeight(true);
 		
 		add(scrollPane, "cell 1 1,alignx left,aligny top");
+	}
+	
+	private void buildBaseResult() {
+		String labelStr = "Zulässige Basislösung: " + this.tableau.getBaseResult();
+		
+		JLabel label = new JLabel(labelStr);
+		add(label, "cell 1 2");
+		
+		if (this.tableau.isOptimal()) {
+			add(new JLabel("Die Lösung ist optimal."), "cell 1 3");
+		}
 	}
 	
 	@Override

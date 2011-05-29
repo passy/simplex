@@ -247,4 +247,16 @@ public class SimplexTableauTestCase extends TestCase {
 					actualResult.get(key), 0);
 		}
 	}
+	
+	@Test
+	public void testGetHorizontalVariableNames() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		
+		String[] horizontalVariableNames = tabl.getHorizontalVariableNames();
+		String[] expectedhorizontalVariableNames = new String[] {
+			"", "x1", "x2", "s1", "s2", "s3", "Z", "b"
+		};
+		Assert.assertArrayEquals(expectedhorizontalVariableNames,
+				horizontalVariableNames);
+	}
 }
