@@ -95,7 +95,7 @@ public class SimplexTableauTestCase extends TestCase {
 	}
 	
 	@Test
-	public void createInitialSimplexTableau() {
+	public void testCreateInitialSimplexTableau() {
 		SimplexProblem problem = this.getSimplexProblem();
 		SimplexTableau tabl = new InitialSimplexTableau(problem);
 		
