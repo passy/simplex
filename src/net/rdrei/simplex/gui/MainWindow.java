@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
@@ -168,5 +169,18 @@ public class MainWindow {
 		
 		JMenu mnberAbout = new JMenu("Über");
 		menuBar.add(mnberAbout);
+		
+		JMenuItem mntmber = new JMenuItem("Über");
+		mntmber.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				JOptionPane.showMessageDialog(MainWindow.this.mainFrame,
+						"Simplex-Rechner für Standard-Maximum-Probleme\n\n" +
+						"Eine Gruppenarbeit von Lucas Voss, Marten Klitze, " +
+						"Julia Kitze und Pascal Hartig.\n" +
+						"Programmierung durch Pascal Hartig " +
+						"<phartig@rdrei.net>");
+			}
+		});
+		mnberAbout.add(mntmber);
 	}
 }
