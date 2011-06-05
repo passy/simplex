@@ -20,6 +20,7 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	 * Stores the variables in the base of the current tableau.
 	 */
 	protected SimplexVariable[] variables;
+	protected boolean variablesSorted;
 	
 	private static Logger LOGGER = Logger.getLogger(
 			"net.rdrei.simplex.lib.SimplexTableau");
@@ -116,14 +117,13 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	 * Return the cell data in a row-wise manner, so it can be added
 	 * to a JTable. The first column includes the base variables as well as
 	 * a Z identifier.
-	 * 
-	 * The base variables might be wrong, if the variables are not correctly
-	 * ordered. Use orderVariables() to be sure.
 	 */
 	public Object[][] getTableData() {
 		// The rows have one column more for the row identifier.
 		Object[][] result =
 			new Object[this.cells[0].length][this.cells.length + 1];
+		// Without this call the order is wrong in the GUI.
+		this.orderVariables();
 		for (int x = 0; x < this.cells.length + 1; x += 1) {
 			// Using using constant ([0]) access here as hint for
 			// the compiler.
@@ -259,7 +259,10 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 	protected void orderVariables() {
 		// This is obviously not thread-safe as this stores the information
 		// unlocked in the object context.
-		Arrays.sort(this.variables);
+		if (!this.variablesSorted) {
+			Arrays.sort(this.variables);
+			this.variablesSorted = true;
+		}
 	}
 	
 	/**
@@ -324,6 +327,7 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		// Those need to be adjusted in an additional step.
 		// TODO: Actually copy those and not re-reference them.
 		tableau.variables = this.variables;
+		tableau.variablesSorted = false;
 		tableau.cells = cells;
 		return tableau;
 	}
@@ -383,6 +387,7 @@ public class SimplexTableau implements Iterable<SimplexTableau> {
 		int sourcePosition = sourceVariable.getPosition();
 		sourceVariable.setPosition(targetVariable.getPosition());
 		targetVariable.setPosition(sourcePosition);
+		this.variablesSorted = false;
 		
 		LOGGER.info(String.format("Swapped variable %s and %s.",
 				sourceVariable, targetVariable));

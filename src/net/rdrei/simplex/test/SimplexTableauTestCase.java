@@ -2,6 +2,7 @@ package net.rdrei.simplex.test;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -290,5 +291,25 @@ public class SimplexTableauTestCase extends TestCase {
 		
 		SimplexTableau firstTableau = tableau.iterator().next();
 		Assert.assertTrue(firstTableau.isOptimal());
+	}
+	
+	public void testBaseVariableRegression() {
+		SimplexTableau tabl = this.getSimplexTableau();
+		
+		Iterator<SimplexTableau> iterator = tabl.iterator();
+		iterator.next();
+		tabl = iterator.next();
+		
+		Object[][] tableData = tabl.getTableData();
+		String[] baseVariables = new String[3];
+		
+		for (int i = 0; i < 3; i += 1) {
+			baseVariables[i] = (String) tableData[i][0];
+		}
+		
+		// The last variable used to be wrong because the variables
+		// were sorted afterwards.
+		Assert.assertArrayEquals(new String[] {"x1", "s2", "x2"},
+				baseVariables);
 	}
 }

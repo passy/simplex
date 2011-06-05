@@ -97,6 +97,7 @@ public class InitialSimplexTableau extends SimplexTableau {
 		for (int i = 0; i < this.restrictionCount; i += 1) {
 			this.variables[i] = new SimplexVariable(i, i, true);
 		}
+		this.variablesSorted = false;
 		// Add non-base variables.
 		// The index (j) here starts from 0, the position (i), however,
 		// must continue the global index.
