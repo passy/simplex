@@ -22,7 +22,6 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-import junit.framework.Assert;
 
 public class MainWindow {
 
