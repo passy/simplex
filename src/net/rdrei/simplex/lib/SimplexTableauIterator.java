@@ -2,6 +2,7 @@ package net.rdrei.simplex.lib;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.logging.Logger;
 
 public class SimplexTableauIterator implements Iterator<SimplexTableau> {
 	
@@ -9,6 +10,9 @@ public class SimplexTableauIterator implements Iterator<SimplexTableau> {
 	 * Reference to the previous simplex tableau.
 	 */
 	private SimplexTableau tableau;
+	
+	private static Logger LOGGER = 
+		Logger.getLogger("net.rdrei.simplex.lib.SimplexTableauIterator");
 
 	public SimplexTableauIterator(SimplexTableau tableau) {
 		super();
@@ -33,7 +37,9 @@ public class SimplexTableauIterator implements Iterator<SimplexTableau> {
 			// if we can't find the pivot element.
 			pivotElement = this.tableau.getPivotElement();		
 		}  catch (SimplexPivotException e) {
-			throw new NoSuchElementException("Tableau is optimal.");
+			LOGGER.warning("Encountered exception while retrieving next " +
+					"tableau: " + e.toString());
+			throw new NoSuchElementException(e.getMessage());
 		}
 		
 		// Create the pivot step element.

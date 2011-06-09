@@ -87,8 +87,9 @@ public class MainWindow {
 			// be safe.
 			if (panel.hasNextStep()) {
 				SimplexStepPanel nextPanel = panel.nextStep();
-				Assert.assertNotNull("There is no panel!", nextPanel);
-				MainWindow.this.setMainPanel(nextPanel);
+				if (nextPanel != null) {
+					MainWindow.this.setMainPanel(nextPanel);
+				}
 			}
 		}
 	};

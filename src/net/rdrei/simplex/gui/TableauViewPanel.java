@@ -1,8 +1,10 @@
 package net.rdrei.simplex.gui;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
@@ -88,7 +90,18 @@ public class TableauViewPanel extends SimplexStepPanel {
 
 	@Override
 	public SimplexStepPanel nextStep() {
-		SimplexTableau newTableau = iterator.next();
+		SimplexTableau newTableau;
+		
+		try {
+			newTableau = iterator.next();
+		} catch (NoSuchElementException e) {
+			JOptionPane.showMessageDialog(this, "Die Simplex-Berechnung kann " +
+					"fortgesetzt werden. Die interne Fehlerbeschreibung " +
+					"lautet:\n" + e.getMessage(), "Pivot-Fehler",
+					JOptionPane.ERROR_MESSAGE);
+			return null;
+		}
+		
 		SimplexStepPanel panel = new TableauViewPanel(newTableau,
 				this.index + 1);
 		return panel;

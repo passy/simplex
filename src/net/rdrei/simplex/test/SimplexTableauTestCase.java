@@ -3,6 +3,7 @@ package net.rdrei.simplex.test;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import junit.framework.TestCase;
@@ -87,8 +88,32 @@ public class SimplexTableauTestCase extends TestCase {
 		return result;
 	}
 	
+	/**
+	 * Test fixture for an infinite problem.
+	 */
+	private SimplexProblem getInfinitSimplexProblem() {
+		SimplexRestriction rest1 = new SimplexRestriction(new int[]{-2, 1},
+				1);
+		SimplexRestriction rest2 = new SimplexRestriction(new int[]{1, -2},
+				2);
+		
+		int[] baseVariables = new int[] {1, 1};
+		
+		SimplexRestrictionSet restrictionSet = new SimplexRestrictionSet();
+		restrictionSet.add(rest1);
+		restrictionSet.add(rest2);
+		SimplexProblem result = new SimplexProblemMock(baseVariables,
+				restrictionSet);
+		return result;
+	}
+	
 	private InitialSimplexTableauMock getSimplexTableau() {
 		SimplexProblem problem = this.getSimplexProblem();
+		return getSimplexTableau(problem);
+	}
+	
+	private InitialSimplexTableauMock getSimplexTableau(
+			SimplexProblem problem) {
 		InitialSimplexTableauMock tabl =
 			new InitialSimplexTableauMock(problem);
 		
@@ -311,5 +336,25 @@ public class SimplexTableauTestCase extends TestCase {
 		// were sorted afterwards.
 		Assert.assertArrayEquals(new String[] {"x1", "s2", "x2"},
 				baseVariables);
+	}
+	
+	public void testInfiniteSolutionProblem() {
+		// Initial tableau is fine.
+		SimplexTableau tabl = 
+			this.getSimplexTableau(getInfinitSimplexProblem());
+		
+		Iterator<SimplexTableau> iterator = tabl.iterator();
+		// First is fine, as well.
+		System.out.println(iterator.next());
+		// Can't continue due to all-negative pivot column.
+		boolean caught = false;
+		try {
+			iterator.next();
+		} catch (NoSuchElementException e) {
+			caught = true;			
+			Assert.assertTrue(e.getMessage().contains("bottleneck"));
+		}
+		
+		Assert.assertTrue(caught);
 	}
 }
